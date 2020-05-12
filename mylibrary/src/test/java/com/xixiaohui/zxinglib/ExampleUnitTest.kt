@@ -1,4 +1,4 @@
-package com.xixiaohui.mylibrary
+package com.xixiaohui.zxinglib
 
 import org.junit.Test
 

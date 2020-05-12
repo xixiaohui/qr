@@ -2,18 +2,31 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
 
     defaultConfig {
         applicationId "com.xixiaohui.scanner"
-        minSdkVersion 19
+        minSdkVersion 24
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    viewBinding {
+        enabled = true
+    }
+
+    dataBinding {
+        enabled = true
     }
 
     buildTypes {
@@ -25,6 +38,7 @@ android {
 }
 
 dependencies {
+//    implementation project(":mylibrary")
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.2.0'
@@ -34,6 +48,12 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
-    implementation 'com.budiyev.android:code-scanner:2.1.0'
+//    implementation 'com.budiyev.android:code-scanner:2.1.0'
 //    implementation 'com.google.zxing:core:3.4.0'
+
+
+
+    implementation( 'com.journeyapps:zxing-android-embedded:4.1.0' ){ transitive = false }
+    implementation 'com.google.zxing:core:3.3.0'
+
 }

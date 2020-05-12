@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Scanner</string>
+    <string name="Scanner">Scanner</string>
+    <string name="Generator">Generator</string>
 </resources>
