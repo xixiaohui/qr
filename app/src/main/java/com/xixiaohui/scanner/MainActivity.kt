@@ -4,21 +4,22 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.integration.android.IntentIntegrator
 import com.journeyapps.barcodescanner.BarcodeEncoder
+import com.journeyapps.barcodescanner.CaptureManager
+import com.journeyapps.barcodescanner.DecoratedBarcodeView
 import com.xixiaohui.scanner.activity.FavoriteActivity
 import com.xixiaohui.scanner.activity.GenerateActivity
 import com.xixiaohui.scanner.activity.HistoryActivity
 import com.xixiaohui.scanner.activity.SettingsActivity
 import com.xixiaohui.scanner.databinding.ActivityMainBinding
-import java.lang.Exception
 
 
 class MainActivity : AppCompatActivity() {
@@ -29,6 +30,10 @@ class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
 
     lateinit var integrator: IntentIntegrator
+
+    private var capture: CaptureManager? = null
+    private var barcodeScannerView: DecoratedBarcodeView? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,17 +52,19 @@ class MainActivity : AppCompatActivity() {
             Log.i("MainActivity", "Permission is not granted")
         }
 //        scanner()
-        binding.scan.setOnClickListener {
-            startScan()
-        }
-
-        binding.generator.setOnClickListener {
-            generateCodeByCustomeInfo()
-        }
+//        binding.scan.setOnClickListener {
+//            startScan()
+//        }
+//
+//        binding.generator.setOnClickListener {
+//            generateCodeByCustomeInfo()
+//        }
         listenBottomNavigationBar()
 
         supportActionBar!!.title = this.getString(R.string.main_title)
 
+        startScanToolBarCapture(savedInstanceState)
+//        scanToolbar(null)
     }
 
     fun startScan() {
@@ -69,9 +76,19 @@ class MainActivity : AppCompatActivity() {
         integrator.setBarcodeImageEnabled(true);
         integrator.setOrientationLocked(true);
         integrator.initiateScan()
+
     }
 
-    fun generateCodeByScannerInfo(contents:String,format: BarcodeFormat): Unit {
+
+    fun startScanToolBarCapture(savedInstanceState: Bundle?) {
+        barcodeScannerView = binding.zxingBarcodeScanner
+        capture = CaptureManager(this, barcodeScannerView)
+        capture!!.initializeFromIntent(intent, savedInstanceState)
+        capture!!.setShowMissingCameraPermissionDialog(false)
+        capture!!.decode()
+    }
+
+    fun generateCodeByScannerInfo(contents: String, format: BarcodeFormat): Unit {
         try {
             val barcodeEncoder = BarcodeEncoder()
             val bitmap = barcodeEncoder.encodeBitmap(
@@ -79,20 +96,23 @@ class MainActivity : AppCompatActivity() {
                 format, 900, 900
             )
 
-            val imageViewQrCode = binding.imageView
-            imageViewQrCode.setImageBitmap(bitmap)
-        } catch (e:Exception) {
+//            val imageViewQrCode = binding.imageView
+//            imageViewQrCode.setImageBitmap(bitmap)
+        } catch (e: Exception) {
 
         }
     }
 
 
-    fun addInfo(format:String,contents: String): Unit {
-        binding.info.text = contents
-        binding.format.text = format
+    fun addInfo(format: String, contents: String): Unit {
+//        binding.info.text = contents
+//        binding.format.text = format
     }
 
-    fun generateCodeByCustomeInfo(contents:String = "hello~",format: BarcodeFormat=BarcodeFormat.QR_CODE){
+    fun generateCodeByCustomeInfo(
+        contents: String = "hello~",
+        format: BarcodeFormat = BarcodeFormat.QR_CODE
+    ) {
         try {
             val barcodeEncoder = BarcodeEncoder()
             val bitmap = barcodeEncoder.encodeBitmap(
@@ -100,9 +120,9 @@ class MainActivity : AppCompatActivity() {
                 format, 900, 900
             )
 
-            val imageViewQrCode = binding.imageView
-            imageViewQrCode.setImageBitmap(bitmap)
-        } catch (e:Exception) {
+//            val imageViewQrCode = binding.imageView
+//            imageViewQrCode.setImageBitmap(bitmap)
+        } catch (e: Exception) {
 
         }
     }
@@ -116,9 +136,12 @@ class MainActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
 
-                generateCodeByScannerInfo(result.getContents(),BarcodeFormat.valueOf(result.formatName))
-                addInfo(result.contents,result.formatName)
-                Log.i("Tag",result.formatName)
+                generateCodeByScannerInfo(
+                    result.getContents(),
+                    BarcodeFormat.valueOf(result.formatName)
+                )
+                addInfo(result.contents, result.formatName)
+                Log.i("Tag", result.formatName)
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data)
@@ -160,36 +183,41 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-//        codeScanner.startPreview()
+        capture!!.onResume()
     }
 
     override fun onPause() {
-//        codeScanner.releaseResources()
         super.onPause()
+        capture!!.onPause()
     }
 
-    fun gotoActivity(activity:Activity): Unit {
-        val intent = Intent(this,activity::class.java)
+    override fun onDestroy() {
+        super.onDestroy()
+        capture!!.onDestroy()
+    }
+
+    fun gotoActivity(activity: Activity): Unit {
+        val intent = Intent(this, activity::class.java)
         startActivity(intent)
     }
 
-     //底部导航切换
+    //底部导航切换
     private fun listenBottomNavigationBar(): Unit {
-        binding.bottomNavigation.setOnNavigationItemSelectedListener {it ->
-            when(it.itemId){
-                R.id.page_1 ->{
+        binding.bottomNavigation.setOnNavigationItemSelectedListener { it ->
+            when (it.itemId) {
+                R.id.page_1 -> {
                     gotoActivity(GenerateActivity())
                     true
                 }
-                R.id.page_2 ->{
+                R.id.page_2 -> {
                     gotoActivity(HistoryActivity())
                     true
                 }
-                R.id.page_3 ->{
+                R.id.page_3 -> {
                     gotoActivity(FavoriteActivity())
                     true
                 }
-                R.id.page_4 ->{
+                R.id.page_4 -> {
                     gotoActivity(SettingsActivity())
                     true
                 }
