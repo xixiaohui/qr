@@ -1,8 +1,8 @@
 package com.xixiaohui.scanner
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -13,6 +13,10 @@ import androidx.core.content.ContextCompat
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.integration.android.IntentIntegrator
 import com.journeyapps.barcodescanner.BarcodeEncoder
+import com.xixiaohui.scanner.activity.FavoriteActivity
+import com.xixiaohui.scanner.activity.GenerateActivity
+import com.xixiaohui.scanner.activity.HistoryActivity
+import com.xixiaohui.scanner.activity.SettingsActivity
 import com.xixiaohui.scanner.databinding.ActivityMainBinding
 import java.lang.Exception
 
@@ -50,6 +54,10 @@ class MainActivity : AppCompatActivity() {
         binding.generator.setOnClickListener {
             generateCodeByCustomeInfo()
         }
+        listenBottomNavigationBar()
+
+        supportActionBar!!.title = this.getString(R.string.main_title)
+
     }
 
     fun startScan() {
@@ -158,5 +166,36 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
 //        codeScanner.releaseResources()
         super.onPause()
+    }
+
+    fun gotoActivity(activity:Activity): Unit {
+        val intent = Intent(this,activity::class.java)
+        startActivity(intent)
+    }
+
+     //底部导航切换
+    private fun listenBottomNavigationBar(): Unit {
+        binding.bottomNavigation.setOnNavigationItemSelectedListener {it ->
+            when(it.itemId){
+                R.id.page_1 ->{
+                    gotoActivity(GenerateActivity())
+                    true
+                }
+                R.id.page_2 ->{
+                    gotoActivity(HistoryActivity())
+                    true
+                }
+                R.id.page_3 ->{
+                    gotoActivity(FavoriteActivity())
+                    true
+                }
+                R.id.page_4 ->{
+                    gotoActivity(SettingsActivity())
+                    true
+                }
+                else -> false
+
+            }
+        }
     }
 }
