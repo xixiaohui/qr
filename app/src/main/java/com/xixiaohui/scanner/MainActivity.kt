@@ -4,67 +4,147 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.zxing.BarcodeFormat
+import com.google.zxing.ResultPoint
+import com.google.zxing.client.android.BeepManager
+import com.google.zxing.client.android.Intents.Scan.RESULT
 import com.google.zxing.integration.android.IntentIntegrator
-import com.journeyapps.barcodescanner.BarcodeEncoder
-import com.journeyapps.barcodescanner.CaptureManager
-import com.journeyapps.barcodescanner.DecoratedBarcodeView
-import com.xixiaohui.scanner.activity.FavoriteActivity
-import com.xixiaohui.scanner.activity.GenerateActivity
-import com.xixiaohui.scanner.activity.HistoryActivity
-import com.xixiaohui.scanner.activity.SettingsActivity
+import com.journeyapps.barcodescanner.*
+import com.xixiaohui.scanner.activity.*
 import com.xixiaohui.scanner.databinding.ActivityMainBinding
+import com.xixiaohui.scanner.fragment.MAIN
+import com.xixiaohui.scanner.fragment.MainFragment
+import com.xixiaohui.scanner.fragment.ScanFragment
+import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
 //    private lateinit var codeScanner: CodeScanner
 
-    private val MY_PERMISSIONS_REQUEST_READ_CONTACTS = 0
+    private val MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1
 
     lateinit var binding: ActivityMainBinding
 
     lateinit var integrator: IntentIntegrator
 
-    private var capture: CaptureManager? = null
-    private var barcodeScannerView: DecoratedBarcodeView? = null
+    private var barcodeView: DecoratedBarcodeView? = null
+    private var beepManager: BeepManager? = null
+    private var lastText: String? = null
 
+    var fm: FragmentManager = supportFragmentManager
+    var scanFragment = ScanFragment.newInstance()
+
+
+    enum class DATA {
+        TEXT,
+        FORMAT,
+        BITMAP
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        ActivityCompat.requestPermissions(
-            this,
-            arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE),
-            MY_PERMISSIONS_REQUEST_READ_CONTACTS
-        )
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) !=
-            PackageManager.PERMISSION_DENIED
+
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
         ) {
-            Log.i("MainActivity", "Permission is not granted")
+            ActivityCompat.requestPermissions(this,
+                arrayOf(
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.CAMERA
+
+                ), MY_PERMISSIONS_REQUEST_READ_CONTACTS
+            )
         }
-//        scanner()
-//        binding.scan.setOnClickListener {
-//            startScan()
-//        }
-//
-//        binding.generator.setOnClickListener {
-//            generateCodeByCustomeInfo()
-//        }
-        listenBottomNavigationBar()
+
+
 
         supportActionBar!!.title = this.getString(R.string.main_title)
 
-        startScanToolBarCapture(savedInstanceState)
-//        scanToolbar(null)
+
+        val trans = supportFragmentManager.beginTransaction()
+        trans.replace(R.id.main_fragment, MainFragment.newInstance("", ""), MAIN)
+        trans.commit()
+
+//        initContinuous()
+
+//        listenBottomNavigationBar()
+    }
+
+
+    private val callback: BarcodeCallback = object : BarcodeCallback {
+        override fun barcodeResult(result: BarcodeResult) {
+            if (result.text == null || result.text == lastText) {
+                // Prevent duplicate scans
+                return
+            }
+            lastText = result.text
+            barcodeView!!.setStatusText(result.text)
+//            beepManager!!.playBeepSoundAndVibrate()
+
+            Toast.makeText(this@MainActivity, result.text, Toast.LENGTH_LONG).show()
+
+            //Added preview of scanned barcode
+//            val imageView =
+//                findViewById<ImageView>(R.id.barcodePreview)
+//            imageView.setImageBitmap(result.getBitmapWithResultPoints(Color.YELLOW))
+
+//            gotoActivity(ScanActivity::class.java as Class<Activity>,result)
+            addScanFragment()
+        }
+
+        override fun possibleResultPoints(resultPoints: List<ResultPoint>) {
+            Log.i("Tag", resultPoints.toString())
+        }
+    }
+
+
+    fun addScanFragment() {
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.scan_fragment, ScanFragment.newInstance(), MAIN)
+        transaction.commit()
+    }
+
+    /**
+     * 响应点击事件
+     */
+    fun clickFromImage(view: View?): Unit {
+        Log.i("Tag", "clickFromImage")
+    }
+
+    private fun initContinuous(): Unit {
+//        barcodeView = binding.barcodeScanner
+        barcodeView = findViewById(R.id.barcode_scanner)
+        if (barcodeView == null) {
+            return
+        }
+        val formats: Collection<BarcodeFormat> =
+            Arrays.asList(
+                BarcodeFormat.QR_CODE,
+                BarcodeFormat.CODE_39,
+                BarcodeFormat.EAN_13
+            )
+        barcodeView!!.barcodeView.decoderFactory = DefaultDecoderFactory(formats)
+        barcodeView!!.initializeFromIntent(intent)
+        barcodeView!!.decodeContinuous(callback)
+        beepManager = BeepManager(this)
+
     }
 
     fun startScan() {
@@ -76,31 +156,16 @@ class MainActivity : AppCompatActivity() {
         integrator.setBarcodeImageEnabled(true);
         integrator.setOrientationLocked(true);
         integrator.initiateScan()
-
     }
 
-
-    fun startScanToolBarCapture(savedInstanceState: Bundle?) {
-        barcodeScannerView = binding.zxingBarcodeScanner
-        capture = CaptureManager(this, barcodeScannerView)
-        capture!!.initializeFromIntent(intent, savedInstanceState)
-        capture!!.setShowMissingCameraPermissionDialog(false)
-        capture!!.decode()
-    }
-
-    fun generateCodeByScannerInfo(contents: String, format: BarcodeFormat): Unit {
-        try {
-            val barcodeEncoder = BarcodeEncoder()
-            val bitmap = barcodeEncoder.encodeBitmap(
-                contents,
-                format, 900, 900
-            )
-
-//            val imageViewQrCode = binding.imageView
-//            imageViewQrCode.setImageBitmap(bitmap)
-        } catch (e: Exception) {
-
-        }
+    fun scanBarcodeCustomLayout(view: View?) {
+        integrator = IntentIntegrator(this)
+        integrator.captureActivity = MainActivity::class.java
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES)
+        integrator.setPrompt("Scan something")
+        integrator.setOrientationLocked(false)
+        integrator.setBeepEnabled(false)
+        integrator.initiateScan()
     }
 
 
@@ -128,102 +193,49 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        var result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
-        if (result != null) {
-            if (result.getContents() == null) {
-                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
-
-                generateCodeByScannerInfo(
-                    result.getContents(),
-                    BarcodeFormat.valueOf(result.formatName)
-                )
-                addInfo(result.contents, result.formatName)
-                Log.i("Tag", result.formatName)
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data)
-        }
-
-    }
-
-    fun scanner(): Unit {
-//        val scannerView = findViewById<CodeScannerView>(R.id.scanner_view)
-//        codeScanner = CodeScanner(this, scannerView)
-//        // Parameters (default values)
-//        codeScanner.camera = CodeScanner.CAMERA_BACK // or CAMERA_FRONT or specific camera id
-//        codeScanner.formats = CodeScanner.ALL_FORMATS // list of type BarcodeFormat,
-//        // ex. listOf(BarcodeFormat.QR_CODE)
-//        codeScanner.autoFocusMode = AutoFocusMode.SAFE // or CONTINUOUS
-//        codeScanner.scanMode = ScanMode.SINGLE // or CONTINUOUS or PREVIEW
-//        codeScanner.isAutoFocusEnabled = true // Whether to enable auto focus or not
-//        codeScanner.isFlashEnabled = false // Whether to enable flash or not
-//
-//        // Callbacks
-//        codeScanner.decodeCallback = DecodeCallback {
-//            runOnUiThread {
-////                Toast.makeText(this, "Scan result: ${it.text}", Toast.LENGTH_LONG).show()
-//            }
-//        }
-//        codeScanner.errorCallback = ErrorCallback { // or ErrorCallback.SUPPRESS
-//            runOnUiThread {
-//                Toast.makeText(
-//                    this, "Camera initialization error: ${it.message}",
-//                    Toast.LENGTH_LONG
-//                ).show()
-//            }
-//        }
-//
-//        scannerView.setOnClickListener {
-//            codeScanner.startPreview()
-//        }
-    }
-
     override fun onResume() {
         super.onResume()
-        capture!!.onResume()
+
+//        barcodeView!!.resume()
     }
 
     override fun onPause() {
         super.onPause()
-        capture!!.onPause()
+
+//        barcodeView!!.pause()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        capture!!.onDestroy()
+//        capture!!.onDestroy()
     }
 
-    fun gotoActivity(activity: Activity): Unit {
+    private fun gotoActivity(activity: Activity): Unit {
         val intent = Intent(this, activity::class.java)
         startActivity(intent)
     }
 
-    //底部导航切换
-    private fun listenBottomNavigationBar(): Unit {
-        binding.bottomNavigation.setOnNavigationItemSelectedListener { it ->
-            when (it.itemId) {
-                R.id.page_1 -> {
-                    gotoActivity(GenerateActivity())
-                    true
-                }
-                R.id.page_2 -> {
-                    gotoActivity(HistoryActivity())
-                    true
-                }
-                R.id.page_3 -> {
-                    gotoActivity(FavoriteActivity())
-                    true
-                }
-                R.id.page_4 -> {
-                    gotoActivity(SettingsActivity())
-                    true
-                }
-                else -> false
+    private fun gotoActivity(cls: Class<Activity>, result: BarcodeResult): Unit {
+        val intent = Intent(this, cls)
+        intent.putExtra(DATA.TEXT.toString(), result.text)
+        intent.putExtra(DATA.FORMAT.toString(), result.barcodeFormat.name)
+        intent.putExtra(DATA.BITMAP.toString(), result.bitmap)
+        startActivity(intent)
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        when (requestCode) {
+            MY_PERMISSIONS_REQUEST_READ_CONTACTS -> {
 
             }
+
         }
     }
+
 }

@@ -26,7 +26,6 @@ class HistoryActivity : AppCompatActivity() {
             this.title = title
         }
 
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

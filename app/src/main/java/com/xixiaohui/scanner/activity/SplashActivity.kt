@@ -13,6 +13,8 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
 
         scanToolbar(null)
+
+        supportActionBar!!.title = this.resources.getString(R.string.splash)
     }
 
     fun scanCustomScanner(view: View?) {
