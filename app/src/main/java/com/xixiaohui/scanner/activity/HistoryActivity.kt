@@ -8,6 +8,9 @@ import com.xixiaohui.scanner.MainActivity
 import com.xixiaohui.scanner.R
 import com.xixiaohui.scanner.databinding.ActivityFavoriteBinding
 import com.xixiaohui.scanner.databinding.ActivityHistoryBinding
+import com.xixiaohui.scanner.fragment.HistoryFragment
+import com.xixiaohui.scanner.fragment.MAIN
+import com.xixiaohui.scanner.fragment.MainFragment
 import com.xixiaohui.scanner.resultList
 
 class HistoryActivity : AppCompatActivity() {
@@ -29,6 +32,10 @@ class HistoryActivity : AppCompatActivity() {
 
         val num = resultList.size
         binding.historyText.text = "" + num
+
+        val trans = supportFragmentManager.beginTransaction()
+        trans.replace(R.id.history_fragment, HistoryFragment.newInstance(1), "HISTORY")
+        trans.commit()
 
     }
 

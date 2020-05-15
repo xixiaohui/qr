@@ -14,6 +14,7 @@ import com.journeyapps.barcodescanner.BarcodeEncoder
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
 import com.xixiaohui.scanner.activity.MyResult
 import com.xixiaohui.scanner.databinding.ActivityMainBinding
+import com.xixiaohui.scanner.fragment.HistoryFragment
 import com.xixiaohui.scanner.fragment.MAIN
 import com.xixiaohui.scanner.fragment.MainFragment
 import com.xixiaohui.scanner.utils.SpUtils
@@ -63,7 +64,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar!!.title = this.getString(R.string.main_title)
 
         val trans = supportFragmentManager.beginTransaction()
-        trans.replace(R.id.main_fragment, MainFragment.newInstance("", ""), MAIN)
+        trans.replace(R.id.main_fragment, MainFragment.newInstance("",""), MAIN)
         trans.commit()
 
         initResultList()
