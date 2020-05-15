@@ -8,6 +8,7 @@ import com.xixiaohui.scanner.MainActivity
 import com.xixiaohui.scanner.R
 import com.xixiaohui.scanner.databinding.ActivityFavoriteBinding
 import com.xixiaohui.scanner.databinding.ActivityHistoryBinding
+import com.xixiaohui.scanner.resultList
 
 class HistoryActivity : AppCompatActivity() {
 
@@ -26,15 +27,18 @@ class HistoryActivity : AppCompatActivity() {
             this.title = title
         }
 
+        val num = resultList.size
+        binding.historyText.text = "" + num
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            android.R.id.home->{
+        when (item.itemId) {
+            android.R.id.home -> {
                 finish()
                 true
             }
-            else->false
+            else -> false
         }
         return super.onOptionsItemSelected(item)
     }

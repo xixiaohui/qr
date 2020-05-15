@@ -4,8 +4,6 @@ import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
-import android.hardware.Camera
-import android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
@@ -21,15 +19,12 @@ import com.google.zxing.Result
 import com.google.zxing.ResultPoint
 import com.google.zxing.client.android.BeepManager
 import com.google.zxing.client.android.Intents
-import com.google.zxing.client.android.camera.CameraConfigurationUtils
-import com.google.zxing.client.android.camera.open.OpenCameraInterface
 import com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
 import com.journeyapps.barcodescanner.DefaultDecoderFactory
 import com.journeyapps.barcodescanner.camera.CameraInstance
-import com.journeyapps.barcodescanner.camera.CameraManager
 import com.xixiaohui.scanner.MainActivity
 import com.xixiaohui.scanner.QRCodeDecoder
 import com.xixiaohui.scanner.R
@@ -80,9 +75,6 @@ class MainFragment : Fragment() {
         }
         binding.fromImage2.setOnClickListener {
             startLight(null)
-        }
-        binding.fromImage3.setOnClickListener {
-            rechangeCamera()
         }
 
     }
@@ -218,14 +210,6 @@ class MainFragment : Fragment() {
         }
     }
 
-    //转换摄像头
-    private fun rechangeCamera(): Unit {
-
-//        barcodeView!!.barcodeView.cameraSettings.requestedCameraId=1
-
-    }
-
-
 
     // 开启闪光灯
     private fun startLight(view: View?): Unit {
@@ -314,8 +298,6 @@ class MainFragment : Fragment() {
 
         protected override fun doInBackground(vararg strings: String?): Result {
             // 解析二维码/条码
-
-
             return QRCodeDecoder.syncDecodeQRCode(path);
         }
 
@@ -342,6 +324,5 @@ class MainFragment : Fragment() {
 
     private fun handleResult(result: Result) {
         gotoActivity(ScanActivity::class.java as Class<Activity>, result)
-
     }
 }

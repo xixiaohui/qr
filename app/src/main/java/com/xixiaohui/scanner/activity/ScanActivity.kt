@@ -1,22 +1,28 @@
 package com.xixiaohui.scanner.activity
 
+import android.content.SharedPreferences
 import android.graphics.Bitmap
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import com.google.zxing.BarcodeFormat
+import com.google.zxing.Result
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import com.xixiaohui.scanner.MainActivity
 import com.xixiaohui.scanner.R
 import com.xixiaohui.scanner.databinding.ActivityScanBinding
+import com.xixiaohui.scanner.resultList
+import com.xixiaohui.scanner.utils.SpUtils
 
 /**
  * 扫描详情页
  */
+data class MyResult(val text: String, val format: String)
 
 class ScanActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityScanBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        setContentView(R.layout.activity_scan)
@@ -29,12 +35,17 @@ class ScanActivity : AppCompatActivity() {
             this.title = title
         }
 
-//        val bitmap = intent.getParcelableExtra<Bitmap>(MainActivity.DATA.BITMAP.toString())
+//      val bitmap = intent.getParcelableExtra<Bitmap>(MainActivity.DATA.BITMAP.toString())
         val text = intent.getStringExtra(MainActivity.DATA.TEXT.toString())
         val format = intent.getStringExtra(MainActivity.DATA.FORMAT.toString())
 
+        val myResult = MyResult(text, format)
+        saveResult(myResult)
+
+//        val myhisResult = SpUtils.getBean<MyResult>(baseContext, "TEST", MyResult::class.java)
+
         binding.barcodeText.text = text
-//        binding.barcodePreview.setImageBitmap(bitmap)
+//      binding.barcodePreview.setImageBitmap(bitmap)
         generateCodeByScannerInfo(text, format = BarcodeFormat.valueOf(format))
     }
 
@@ -61,6 +72,11 @@ class ScanActivity : AppCompatActivity() {
         } catch (e: Exception) {
 
         }
+    }
+
+    private fun saveResult(myResult:MyResult){
+        SpUtils.saveBean(baseContext, SpUtils.randomKey(), myResult)
+        resultList.add(myResult)
     }
 
 }

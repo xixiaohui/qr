@@ -1,33 +1,24 @@
 package com.xixiaohui.scanner
 
 import android.Manifest
-import android.app.Activity
-import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
-import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.gson.Gson
 import com.google.zxing.BarcodeFormat
-import com.google.zxing.ResultPoint
 import com.google.zxing.client.android.BeepManager
-import com.google.zxing.client.android.Intents.Scan.RESULT
 import com.google.zxing.integration.android.IntentIntegrator
-import com.journeyapps.barcodescanner.*
-import com.xixiaohui.scanner.activity.*
+import com.journeyapps.barcodescanner.BarcodeEncoder
+import com.journeyapps.barcodescanner.DecoratedBarcodeView
+import com.xixiaohui.scanner.activity.MyResult
 import com.xixiaohui.scanner.databinding.ActivityMainBinding
 import com.xixiaohui.scanner.fragment.MAIN
 import com.xixiaohui.scanner.fragment.MainFragment
-import com.xixiaohui.scanner.fragment.ScanFragment
-import java.util.*
+import com.xixiaohui.scanner.utils.SpUtils
 
+var resultList: MutableList<MyResult> = mutableListOf()
 
 class MainActivity : AppCompatActivity() {
 //    private lateinit var codeScanner: CodeScanner
@@ -42,8 +33,6 @@ class MainActivity : AppCompatActivity() {
     private var beepManager: BeepManager? = null
     private var lastText: String? = null
 
-    var fm: FragmentManager = supportFragmentManager
-    var scanFragment = ScanFragment.newInstance()
 
 
     enum class DATA {
@@ -77,6 +66,7 @@ class MainActivity : AppCompatActivity() {
         trans.replace(R.id.main_fragment, MainFragment.newInstance("", ""), MAIN)
         trans.commit()
 
+        initResultList()
     }
 
     fun generateCodeByCustomeInfo(
@@ -96,5 +86,19 @@ class MainActivity : AppCompatActivity() {
 
         }
     }
+
+    private fun initResultList(): Unit {
+        val allRecord  = SpUtils.getAllRecode(baseContext)
+        val gson = Gson()
+//        return gson.fromJson(objString, clazz)
+        for((k,v) in allRecord ){
+
+            val result = gson.fromJson(v as String, MyResult::class.java)
+            resultList.add(result)
+        }
+        println(resultList)
+    }
+
+
 
 }
