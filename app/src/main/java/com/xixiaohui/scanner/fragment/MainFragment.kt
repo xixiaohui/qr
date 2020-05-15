@@ -4,12 +4,13 @@ import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
+import android.hardware.Camera
+import android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
 import android.provider.DocumentsContract
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,11 +20,16 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.Result
 import com.google.zxing.ResultPoint
 import com.google.zxing.client.android.BeepManager
+import com.google.zxing.client.android.Intents
+import com.google.zxing.client.android.camera.CameraConfigurationUtils
+import com.google.zxing.client.android.camera.open.OpenCameraInterface
 import com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
 import com.journeyapps.barcodescanner.DefaultDecoderFactory
+import com.journeyapps.barcodescanner.camera.CameraInstance
+import com.journeyapps.barcodescanner.camera.CameraManager
 import com.xixiaohui.scanner.MainActivity
 import com.xixiaohui.scanner.QRCodeDecoder
 import com.xixiaohui.scanner.R
@@ -51,6 +57,10 @@ class MainFragment : Fragment() {
 
     private lateinit var binding: FragmentMainBinding
 
+    private lateinit var caIns: CameraInstance
+
+    private var torchOn = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,9 +73,18 @@ class MainFragment : Fragment() {
         initContinuous()
         listenBottomNavigationBar()
 
+        caIns = CameraInstance(context)
+
         binding.fromImage.setOnClickListener {
             gotoPhotoAlbum()
         }
+        binding.fromImage2.setOnClickListener {
+            startLight(null)
+        }
+        binding.fromImage3.setOnClickListener {
+            rechangeCamera()
+        }
+
     }
 
     override fun onCreateView(
@@ -73,8 +92,6 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-
-
         return binding.root
     }
 
@@ -99,11 +116,6 @@ class MainFragment : Fragment() {
     }
 
 
-    fun clickFromImage(view: View?): Unit {
-        Log.i("MainFragment", "clickFromImage")
-
-    }
-
     private var barcodeView: DecoratedBarcodeView? = null
     private var beepManager: BeepManager? = null
     private var lastText: String? = null
@@ -127,12 +139,6 @@ class MainFragment : Fragment() {
 
             gotoActivity(ScanActivity::class.java as Class<Activity>, result.result)
 
-//            addScanFragment()
-
-//            val transaction = fragmentManager!!.beginTransaction()
-//            transaction.replace(R.id.scan_fragment, ScanFragment.newInstance(), SCAN)
-//            transaction.commit()
-//            transaction.hide(this@MainFragment)
 
         }
 
@@ -148,6 +154,7 @@ class MainFragment : Fragment() {
         if (barcodeView == null) {
             return
         }
+
         val formats: Collection<BarcodeFormat> =
             Arrays.asList(
                 BarcodeFormat.QR_CODE,
@@ -158,11 +165,10 @@ class MainFragment : Fragment() {
         barcodeView!!.initializeFromIntent(this.activity!!.intent)
         barcodeView!!.decodeContinuous(callback)
         beepManager = BeepManager(this.activity)
-
     }
 
-    private fun gotoActivity(activity: Activity): Unit {
-        val intent = Intent(this.activity, activity::class.java)
+    private fun gotoActivity(cls: Class<Activity>): Unit {
+        val intent = Intent(this.activity, cls)
         startActivity(intent)
     }
 
@@ -192,19 +198,19 @@ class MainFragment : Fragment() {
         bottomNavigation.setOnNavigationItemSelectedListener { it ->
             when (it.itemId) {
                 R.id.page_1 -> {
-                    gotoActivity(GenerateActivity())
+                    gotoActivity(GenerateActivity::class.java as Class<Activity>)
                     true
                 }
                 R.id.page_2 -> {
-                    gotoActivity(HistoryActivity())
+                    gotoActivity(HistoryActivity::class.java as Class<Activity>)
                     true
                 }
                 R.id.page_3 -> {
-                    gotoActivity(FavoriteActivity())
+                    gotoActivity(FavoriteActivity::class.java as Class<Activity>)
                     true
                 }
                 R.id.page_4 -> {
-                    gotoActivity(SettingsActivity())
+                    gotoActivity(SettingsActivity::class.java as Class<Activity>)
                     true
                 }
                 else -> false
@@ -212,11 +218,31 @@ class MainFragment : Fragment() {
         }
     }
 
+    //转换摄像头
+    private fun rechangeCamera(): Unit {
+
+//        barcodeView!!.barcodeView.cameraSettings.requestedCameraId=1
+
+    }
+
+
+
+    // 开启闪光灯
+    private fun startLight(view: View?): Unit {
+
+        torchOn = !torchOn
+        if (torchOn) {
+            barcodeView!!.setTorchOn()
+        } else {
+            barcodeView!!.setTorchOff()
+        }
+    }
+
     //跳转相册
     fun gotoPhotoAlbum(): Unit {
         val intent = Intent(Intent.ACTION_GET_CONTENT);
         intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-        val wrapperIntent = Intent.createChooser(intent, "选择二维码图片")
+        val wrapperIntent = Intent.createChooser(intent, "please choose qr code")
         startActivityForResult(wrapperIntent, REQUEST_CODE)
     }
 
@@ -288,6 +314,8 @@ class MainFragment : Fragment() {
 
         protected override fun doInBackground(vararg strings: String?): Result {
             // 解析二维码/条码
+
+
             return QRCodeDecoder.syncDecodeQRCode(path);
         }
 
@@ -309,7 +337,6 @@ class MainFragment : Fragment() {
         } else {
             // 识别出图片二维码/条码，内容为s
             handleResult(s)
-            //Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
         }
     }
 
