@@ -1,15 +1,18 @@
 package com.xixiaohui.scanner.fragment
 
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.Result
 import com.xixiaohui.scanner.R
-import com.xixiaohui.scanner.dummy.DummyContent
+import com.xixiaohui.scanner.resultList
+
 
 /**
  * A fragment representing a list of Items.
@@ -41,7 +44,7 @@ class HistoryFragment : Fragment() {
                 }
                 adapter =
                     MyItemRecyclerViewAdapter(
-                        DummyContent.ITEMS
+                        resultList
                     )
             }
         }
@@ -61,5 +64,70 @@ class HistoryFragment : Fragment() {
                     putInt(ARG_COLUMN_COUNT, columnCount)
                 }
             }
+
+
+        fun getType(result: Result): CodeType {
+
+            if (result.barcodeFormat.toString() == BarcodeFormat.EAN_13.toString()){
+                return CodeType.PRODUCT
+            }
+
+            var text = result.text
+            if(text.startsWith("MECARD:")){
+                return CodeType.MECARD
+            }else if(text.startsWith("mailto:")){
+                return CodeType.EMAIL
+            }else if(text.startsWith("URLTO:")){
+                return CodeType.URL
+            }else if(text.startsWith("smsto:")){
+                return CodeType.SMS
+            }else if(text.startsWith("geo:")){
+                return CodeType.GEO
+            }else if(text.startsWith("tel:")){
+                return CodeType.PHONE
+            }else if(text.startsWith("WIFI:")){
+                return CodeType.WIFI
+            }else if(text.startsWith("market:")){
+                return CodeType.APP
+            }else if(text.startsWith("BEGIN:VEVENT")){
+                return CodeType.CALENDAR
+            }else{
+                return CodeType.TEXT
+            }
+        }
+
+        fun getResourceImageByType(type:CodeType):Int{
+            return when(type){
+                CodeType.URL-> R.drawable.baseline_link_black_48dp
+                CodeType.EMAIL-> R.drawable.baseline_email_black_48dp
+                CodeType.PHONE-> R.drawable.baseline_phone_black_48dp
+                CodeType.MECARD-> R.drawable.baseline_perm_contact_calendar_black_48dp
+                CodeType.SMS-> R.drawable.baseline_sms_black_48dp
+                CodeType.GEO-> R.drawable.baseline_location_on_black_48dp
+                CodeType.WIFI-> R.drawable.baseline_wifi_black_48dp
+                CodeType.APP-> R.drawable.baseline_apps_black_48dp
+                CodeType.CALENDAR-> R.drawable.baseline_today_black_48dp
+                CodeType.PRODUCT-> R.drawable.baseline_local_grocery_store_black_48dp
+                else -> R.drawable.baseline_text_fields_black_48dp
+            }
+        }
+        fun getResourceImage(result: Result):Int{
+            return getResourceImageByType(getType(result))
+        }
     }
+    enum class CodeType{
+        URL,
+        TEXT,
+        EMAIL,
+        PHONE,
+        MECARD,
+        SMS,
+        GEO,
+        WIFI,
+        APP,
+        CALENDAR,
+        PRODUCT
+    }
+
+
 }

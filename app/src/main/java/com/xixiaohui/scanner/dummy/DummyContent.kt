@@ -1,5 +1,6 @@
 package com.xixiaohui.scanner.dummy
 
+import com.google.zxing.Result
 import java.util.ArrayList
 import java.util.HashMap
 
@@ -14,29 +15,25 @@ object DummyContent {
     /**
      * An array of sample (dummy) items.
      */
-    val ITEMS: MutableList<DummyItem> = ArrayList()
+    val ITEMS: MutableList<Result> = ArrayList()
 
     /**
      * A map of sample (dummy) items, by ID.
      */
-    val ITEM_MAP: MutableMap<String, DummyItem> = HashMap()
+    val ITEM_MAP: MutableMap<String, Result> = HashMap()
 
     private val COUNT = 25
 
     init {
         // Add some sample items.
-        for (i in 1..COUNT) {
-            addItem(createDummyItem(i))
-        }
+//        for (i in 1..COUNT) {
+////            addItem(createDummyItem(i))
+////        }
     }
 
-    private fun addItem(item: DummyItem) {
+    private fun addItem(item: Result) {
         ITEMS.add(item)
-        ITEM_MAP.put(item.id, item)
-    }
-
-    private fun createDummyItem(position: Int): DummyItem {
-        return DummyItem(position.toString(), "Item " + position, makeDetails(position))
+//        ITEM_MAP.put(item.id, item)
     }
 
     private fun makeDetails(position: Int): String {
@@ -48,10 +45,4 @@ object DummyContent {
         return builder.toString()
     }
 
-    /**
-     * A dummy item representing a piece of content.
-     */
-    data class DummyItem(val id: String, val content: String, val details: String) {
-        override fun toString(): String = content
-    }
 }

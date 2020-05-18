@@ -8,6 +8,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.gson.Gson
 import com.google.zxing.BarcodeFormat
+import com.google.zxing.Result
 import com.google.zxing.client.android.BeepManager
 import com.google.zxing.integration.android.IntentIntegrator
 import com.journeyapps.barcodescanner.BarcodeEncoder
@@ -19,7 +20,7 @@ import com.xixiaohui.scanner.fragment.MAIN
 import com.xixiaohui.scanner.fragment.MainFragment
 import com.xixiaohui.scanner.utils.SpUtils
 
-var resultList: MutableList<MyResult> = mutableListOf()
+var resultList: MutableList<Result> = mutableListOf()
 
 class MainActivity : AppCompatActivity() {
 //    private lateinit var codeScanner: CodeScanner
@@ -28,18 +29,9 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMainBinding
 
-    lateinit var integrator: IntentIntegrator
-
-    private var barcodeView: DecoratedBarcodeView? = null
-    private var beepManager: BeepManager? = null
-    private var lastText: String? = null
-
-
 
     enum class DATA {
-        TEXT,
-        FORMAT,
-        BITMAP
+        OBJECT
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,12 +86,11 @@ class MainActivity : AppCompatActivity() {
 //        return gson.fromJson(objString, clazz)
         for((k,v) in allRecord ){
 
-            val result = gson.fromJson(v as String, MyResult::class.java)
+            val result = gson.fromJson(v as String, Result::class.java)
             resultList.add(result)
         }
-        println(resultList)
+//        println(resultList)
     }
-
 
 
 }

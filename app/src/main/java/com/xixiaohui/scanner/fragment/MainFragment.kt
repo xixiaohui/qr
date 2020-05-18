@@ -14,11 +14,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.google.gson.Gson
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.Result
 import com.google.zxing.ResultPoint
 import com.google.zxing.client.android.BeepManager
-import com.google.zxing.client.android.Intents
 import com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
@@ -131,7 +131,6 @@ class MainFragment : Fragment() {
 
             gotoActivity(ScanActivity::class.java as Class<Activity>, result.result)
 
-
         }
 
         override fun possibleResultPoints(resultPoints: List<ResultPoint>) {
@@ -166,8 +165,14 @@ class MainFragment : Fragment() {
 
     private fun gotoActivity(cls: Class<Activity>, result: Result): Unit {
         val intent = Intent(this.activity, cls)
-        intent.putExtra(MainActivity.DATA.TEXT.toString(), result.text)
-        intent.putExtra(MainActivity.DATA.FORMAT.toString(), result.barcodeFormat.name)
+
+        val mygson = Gson()
+        val objString = mygson.toJson(result)
+
+        intent.putExtra(MainActivity.DATA.OBJECT.toString(),objString)
+//        intent.putExtra(MainActivity.DATA.TEXT.toString(), result.text)
+//        intent.putExtra(MainActivity.DATA.FORMAT.toString(), result.barcodeFormat.name)
+
         startActivity(intent)
     }
 

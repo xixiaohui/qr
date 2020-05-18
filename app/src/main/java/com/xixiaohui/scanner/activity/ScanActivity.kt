@@ -1,10 +1,9 @@
 package com.xixiaohui.scanner.activity
 
-import android.content.SharedPreferences
-import android.graphics.Bitmap
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
+import com.google.gson.Gson
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.Result
 import com.journeyapps.barcodescanner.BarcodeEncoder
@@ -36,17 +35,20 @@ class ScanActivity : AppCompatActivity() {
         }
 
 //      val bitmap = intent.getParcelableExtra<Bitmap>(MainActivity.DATA.BITMAP.toString())
-        val text = intent.getStringExtra(MainActivity.DATA.TEXT.toString())
-        val format = intent.getStringExtra(MainActivity.DATA.FORMAT.toString())
+//        val text = intent.getStringExtra(MainActivity.DATA.TEXT.toString())
+//        val format = intent.getStringExtra(MainActivity.DATA.FORMAT.toString())
+        val objString = intent.getStringExtra(MainActivity.DATA.OBJECT.toString())
+        val gson = Gson()
+        val result = gson.fromJson(objString, Result::class.java);
 
-        val myResult = MyResult(text, format)
-        saveResult(myResult)
+//        val myResult = MyResult(text, format)
+        saveResult(result)
 
 //        val myhisResult = SpUtils.getBean<MyResult>(baseContext, "TEST", MyResult::class.java)
 
-        binding.barcodeText.text = text
+        binding.barcodeText.text = result.text
 //      binding.barcodePreview.setImageBitmap(bitmap)
-        generateCodeByScannerInfo(text, format = BarcodeFormat.valueOf(format))
+        generateCodeByScannerInfo(result.text, format = result.barcodeFormat)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -74,7 +76,7 @@ class ScanActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveResult(myResult:MyResult){
+    private fun saveResult(myResult:Result){
         SpUtils.saveBean(baseContext, SpUtils.randomKey(), myResult)
         resultList.add(myResult)
     }
