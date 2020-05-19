@@ -37,12 +37,17 @@ class ScanActivity : AppCompatActivity() {
 //      val bitmap = intent.getParcelableExtra<Bitmap>(MainActivity.DATA.BITMAP.toString())
 //        val text = intent.getStringExtra(MainActivity.DATA.TEXT.toString())
 //        val format = intent.getStringExtra(MainActivity.DATA.FORMAT.toString())
+
+        var from = intent.getStringExtra(MainActivity.DATA.FROM.toString())
         val objString = intent.getStringExtra(MainActivity.DATA.OBJECT.toString())
         val gson = Gson()
         val result = gson.fromJson(objString, Result::class.java);
 
 //        val myResult = MyResult(text, format)
-        saveResult(result)
+        if (from != "fromHistory"){
+            saveResult(result)
+        }
+
 
 //        val myhisResult = SpUtils.getBean<MyResult>(baseContext, "TEST", MyResult::class.java)
 

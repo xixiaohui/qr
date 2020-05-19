@@ -514,4 +514,12 @@ public class SpUtils {
         SecretKey secretKey = keyGen.generateKey();
         return secretKey.toString();
     }
+
+    public static void remove(Context context,String key){
+        SharedPreferences.Editor editor = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE).edit();
+        editor.remove(key);
+        editor.commit();
+    }
+
+
 }

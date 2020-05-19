@@ -1,11 +1,14 @@
 package com.xixiaohui.scanner
 
 import android.Manifest
+import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import com.google.gson.Gson
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.Result
@@ -21,6 +24,7 @@ import com.xixiaohui.scanner.fragment.MainFragment
 import com.xixiaohui.scanner.utils.SpUtils
 
 var resultList: MutableList<Result> = mutableListOf()
+var keyList:MutableList<String> = mutableListOf()
 
 class MainActivity : AppCompatActivity() {
 //    private lateinit var codeScanner: CodeScanner
@@ -31,7 +35,8 @@ class MainActivity : AppCompatActivity() {
 
 
     enum class DATA {
-        OBJECT
+        OBJECT,
+        FROM
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -88,8 +93,21 @@ class MainActivity : AppCompatActivity() {
 
             val result = gson.fromJson(v as String, Result::class.java)
             resultList.add(result)
+            keyList.add(k)
         }
 //        println(resultList)
+    }
+
+    companion object {
+
+         fun gotoActivity(activity:Activity,cls: Class<Activity>, result: Result): Unit {
+            val intent = Intent(activity, cls)
+            val mygson = Gson()
+            val objString = mygson.toJson(result)
+            intent.putExtra(MainActivity.DATA.OBJECT.toString(),objString)
+             intent.putExtra(MainActivity.DATA.FROM.toString(),"fromHistory")
+            startActivity(activity,intent,null)
+        }
     }
 
 

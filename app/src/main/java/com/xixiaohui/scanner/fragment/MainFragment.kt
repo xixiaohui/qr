@@ -158,12 +158,12 @@ class MainFragment : Fragment() {
         beepManager = BeepManager(this.activity)
     }
 
-    private fun gotoActivity(cls: Class<Activity>): Unit {
+    public fun gotoActivity(cls: Class<Activity>): Unit {
         val intent = Intent(this.activity, cls)
         startActivity(intent)
     }
 
-    private fun gotoActivity(cls: Class<Activity>, result: Result): Unit {
+    public fun gotoActivity(cls: Class<Activity>, result: Result): Unit {
         val intent = Intent(this.activity, cls)
 
         val mygson = Gson()

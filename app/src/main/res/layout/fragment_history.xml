@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/item_margin"
     android:layout_marginRight="@dimen/item_margin"
-    android:layout_marginTop="@dimen/item_margin"
+    android:layout_marginTop="1dp"
     android:background="@color/colorWhite"
     android:orientation="horizontal">
 
@@ -24,7 +24,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/item_number"
+            android:id="@+id/item_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/text_top_margin"
@@ -44,6 +44,7 @@
         android:id="@+id/item_star"
         android:layout_width="@dimen/item_image"
         android:layout_height="wrap_content"
+        android:tag="select"
         android:src="@drawable/baseline_star_border_black_48dp">
     </ImageView>
     <ImageView
