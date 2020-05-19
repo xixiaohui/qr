@@ -172,7 +172,6 @@ class MainFragment : Fragment() {
         intent.putExtra(MainActivity.DATA.OBJECT.toString(),objString)
 //        intent.putExtra(MainActivity.DATA.TEXT.toString(), result.text)
 //        intent.putExtra(MainActivity.DATA.FORMAT.toString(), result.barcodeFormat.name)
-
         startActivity(intent)
     }
 

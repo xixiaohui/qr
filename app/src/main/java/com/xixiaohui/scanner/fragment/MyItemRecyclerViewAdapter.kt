@@ -10,15 +10,14 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import com.google.zxing.Result
-import com.xixiaohui.scanner.MainActivity
-import com.xixiaohui.scanner.R
+import com.xixiaohui.scanner.*
 import com.xixiaohui.scanner.activity.ScanActivity
-import com.xixiaohui.scanner.keyList
-import com.xixiaohui.scanner.resultList
 import com.xixiaohui.scanner.utils.SpUtils
 
 import kotlinx.android.synthetic.main.fragment_history.view.*
+import java.text.SimpleDateFormat
 
 /**
  * [RecyclerView.Adapter] that can display a [DummyItem].
@@ -26,7 +25,7 @@ import kotlinx.android.synthetic.main.fragment_history.view.*
  */
 
 class MyItemRecyclerViewAdapter(
-    private val values: List<Result>, val activity: Activity
+    private val values: List<Result>, val fragment: Fragment
 ) : RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -35,18 +34,12 @@ class MyItemRecyclerViewAdapter(
 
         var holder = ViewHolder(view)
 
-        holder.itemStar.setOnClickListener {
-            if (holder.itemStar.tag == "select") {
-                holder.itemStar.setImageResource(R.drawable.baseline_star_black_48dp)
-                holder.itemStar.tag = "unselect"
-            } else {
-                holder.itemStar.setImageResource(R.drawable.baseline_star_border_black_48dp)
-                holder.itemStar.tag = "select"
-            }
-        }
+
 
         return holder
     }
+
+
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = values[position]
@@ -55,7 +48,10 @@ class MyItemRecyclerViewAdapter(
         holder.itemType.text = type.toString()
         holder.itemType.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
 
-        var content = item.text + " " + item.barcodeFormat.toString()
+        var date = SpUtils.getDate(item.timestamp)
+
+//        var content = date+" "+ item.text + " " + item.barcodeFormat.toString()
+        var content = "$date $item.text $item.barcodeFormat.toString()"
         if (content.length > 41) {
             content = content.substring(0..40) + "..."
         }
@@ -65,17 +61,39 @@ class MyItemRecyclerViewAdapter(
         var resourceId = HistoryFragment.getResourceImageByType(type)
         holder.itemImage.setImageResource(resourceId)
 
-        holder.contentView.setOnClickListener{
-            MainActivity.gotoActivity(activity,ScanActivity().javaClass,values[position])
+        holder.itemStar.setOnClickListener {
+            if (holder.itemStar.tag == "unselect") {
+                holder.itemStar.setImageResource(R.drawable.baseline_star_black_48dp)
+                holder.itemStar.tag = "select"
+                favoritesList.add(item)
+
+            } else {
+                holder.itemStar.setImageResource(R.drawable.baseline_star_border_black_48dp)
+                holder.itemStar.tag = "unselect"
+                favoritesList.remove(item)
+
+            }
         }
-        holder.itemType.setOnClickListener{
-            MainActivity.gotoActivity(activity,ScanActivity().javaClass,values[position])
+        if (favoritesList.contains(item)){
+            holder.itemStar.setImageResource(R.drawable.baseline_star_black_48dp)
+            holder.itemStar.tag = "select"
+        }
+
+        //响应事件
+        holder.contentView.setOnClickListener{
+            val frag = fragment as HistoryFragment
+            frag.gotoActivity(ScanActivity::class.java as Class<Activity>,item)
+        }
+        holder.itemImage.setOnClickListener{
+            val frag = fragment as HistoryFragment
+            frag.gotoActivity(ScanActivity::class.java as Class<Activity>,item)
         }
 
         holder.itemMore.setOnClickListener{
+            SpUtils.remove(fragment.context,keyList[position])
             resultList.removeAt(position)
             notifyDataSetChanged()
-            SpUtils.remove(activity,keyList[position])
+
         }
     }
 

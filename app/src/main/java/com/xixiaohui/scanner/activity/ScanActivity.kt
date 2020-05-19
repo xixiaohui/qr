@@ -10,6 +10,7 @@ import com.journeyapps.barcodescanner.BarcodeEncoder
 import com.xixiaohui.scanner.MainActivity
 import com.xixiaohui.scanner.R
 import com.xixiaohui.scanner.databinding.ActivityScanBinding
+import com.xixiaohui.scanner.keyList
 import com.xixiaohui.scanner.resultList
 import com.xixiaohui.scanner.utils.SpUtils
 
@@ -44,7 +45,7 @@ class ScanActivity : AppCompatActivity() {
         val result = gson.fromJson(objString, Result::class.java);
 
 //        val myResult = MyResult(text, format)
-        if (from != "fromHistory"){
+        if (from == null){
             saveResult(result)
         }
 
@@ -82,8 +83,10 @@ class ScanActivity : AppCompatActivity() {
     }
 
     private fun saveResult(myResult:Result){
-        SpUtils.saveBean(baseContext, SpUtils.randomKey(), myResult)
+        var key  = SpUtils.randomKey()
+        SpUtils.saveBean(baseContext, key, myResult)
         resultList.add(myResult)
+        keyList.add(key)
     }
 
 }

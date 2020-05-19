@@ -25,16 +25,15 @@ class HistoryActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val title = this.getString(R.string.history)
+        val num = resultList.size
+
         this.supportActionBar.apply {
             this!!.setDisplayHomeAsUpEnabled(true)
-            this.title = title
+            this.title = "$title $num"
         }
 
-        val num = resultList.size
-        binding.historyText.text = "" + num
-
         val trans = supportFragmentManager.beginTransaction()
-        trans.replace(R.id.history_fragment, HistoryFragment.newInstance(1), "HISTORY")
+        trans.replace(R.id.history_fragment, HistoryFragment.newInstance(1, resultList), "HISTORY")
         trans.commit()
 
     }

@@ -5,6 +5,9 @@ import android.os.Bundle
 import android.view.MenuItem
 import com.xixiaohui.scanner.R
 import com.xixiaohui.scanner.databinding.ActivityFavoriteBinding
+import com.xixiaohui.scanner.favoritesList
+import com.xixiaohui.scanner.fragment.HistoryFragment
+import com.xixiaohui.scanner.resultList
 
 class FavoriteActivity : AppCompatActivity() {
 
@@ -22,6 +25,10 @@ class FavoriteActivity : AppCompatActivity() {
             this!!.setDisplayHomeAsUpEnabled(true)
             this.title = title
         }
+
+        val trans = supportFragmentManager.beginTransaction()
+        trans.replace(R.id.favorite_fragment, HistoryFragment.newInstance(1, favoritesList), "HISTORY")
+        trans.commit()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

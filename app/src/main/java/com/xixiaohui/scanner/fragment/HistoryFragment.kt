@@ -1,6 +1,7 @@
 package com.xixiaohui.scanner.fragment
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.SurfaceHolder
@@ -12,12 +13,15 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.Result
+import com.xixiaohui.scanner.MainActivity
 import com.xixiaohui.scanner.R
 import com.xixiaohui.scanner.databinding.FragmentHistoryBinding
 import com.xixiaohui.scanner.databinding.FragmentHistoryListBinding
 import com.xixiaohui.scanner.resultList
+import java.io.Serializable
 import java.util.*
 
 
@@ -30,11 +34,14 @@ class HistoryFragment : Fragment() {
 
     lateinit var binding: FragmentHistoryListBinding
 
+    private lateinit var data:MutableList<Result>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         arguments?.let {
             columnCount = it.getInt(ARG_COLUMN_COUNT)
+            data = it.getSerializable(DATA) as MutableList<Result>
         }
 
 
@@ -45,7 +52,6 @@ class HistoryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentHistoryListBinding.inflate(layoutInflater)
-//        val view = inflater.inflate(R.layout.fragment_history_list, container, false)
         val view = binding.list
 
         // Set the adapter
@@ -57,22 +63,18 @@ class HistoryFragment : Fragment() {
                 }
                 adapter =
                     MyItemRecyclerViewAdapter(
-                        resultList, activity as Activity
+                        data, this@HistoryFragment
                     )
 
             }
         }
-        binding.list.setItemViewCacheSize(100000)
+        binding.list.setItemViewCacheSize(5000)
 
         binding.list.addOnItemClickListener(object : OnItemClickListener {
             override fun onItemClicked(position: Int, view: View, holder: RecyclerView.ViewHolder) {
 
 //                Toast.makeText(context, "position" + position, Toast.LENGTH_LONG).show()
-                var holder = holder as MyItemRecyclerViewAdapter.ViewHolder
-
-
-
-
+//                var holder = holder as MyItemRecyclerViewAdapter.ViewHolder
 
             }
         })
@@ -84,13 +86,15 @@ class HistoryFragment : Fragment() {
 
         // TODO: Customize parameter argument names
         const val ARG_COLUMN_COUNT = "column-count"
+        const val DATA = "DATA"
 
         // TODO: Customize parameter initialization
         @JvmStatic
-        fun newInstance(columnCount: Int) =
+        fun newInstance(columnCount: Int,data:MutableList<Result>) =
             HistoryFragment().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_COLUMN_COUNT, columnCount)
+                    putSerializable(DATA,data as Serializable)
                 }
             }
 
@@ -100,12 +104,12 @@ class HistoryFragment : Fragment() {
                 return CodeType.PRODUCT
             }
 
-            var text = result.text
-            if (text.startsWith("MECARD:")) {
+            var text = result.text.toLowerCase()
+            if (text.startsWith("mecard:")||text.startsWith("vcard:")) {
                 return CodeType.CONTACT
             } else if (text.startsWith("mailto:")) {
                 return CodeType.EMAIL
-            } else if (text.startsWith("URLTO:")) {
+            } else if (text.startsWith("rulto:")) {
                 return CodeType.URL
             } else if (text.startsWith("smsto:")) {
                 return CodeType.SMS
@@ -113,11 +117,11 @@ class HistoryFragment : Fragment() {
                 return CodeType.GEO
             } else if (text.startsWith("tel:")) {
                 return CodeType.PHONE
-            } else if (text.startsWith("WIFI:")) {
+            } else if (text.startsWith("wifi:")) {
                 return CodeType.WIFI
             } else if (text.startsWith("market:")) {
                 return CodeType.APP
-            } else if (text.startsWith("BEGIN:VEVENT")) {
+            } else if (text.startsWith("begin:vevent")) {
                 return CodeType.CALENDAR
             } else if (text.contains("www") || text.contains("http")) {
                 return CodeType.URL
@@ -183,4 +187,15 @@ class HistoryFragment : Fragment() {
         })
     }
 
+
+    public fun gotoActivity(cls: Class<Activity>, result: Result): Unit {
+        val intent = Intent(this.context, cls)
+
+        val mygson = Gson()
+        val objString = mygson.toJson(result)
+
+        intent.putExtra(MainActivity.DATA.OBJECT.toString(),objString)
+        intent.putExtra(MainActivity.DATA.FROM.toString(), "NotFreshCode")
+        startActivity(intent)
+    }
 }

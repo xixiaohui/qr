@@ -44,7 +44,7 @@
         android:id="@+id/item_star"
         android:layout_width="@dimen/item_image"
         android:layout_height="wrap_content"
-        android:tag="select"
+        android:tag="unselect"
         android:src="@drawable/baseline_star_border_black_48dp">
     </ImageView>
     <ImageView

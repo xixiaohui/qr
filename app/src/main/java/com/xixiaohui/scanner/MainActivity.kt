@@ -23,8 +23,14 @@ import com.xixiaohui.scanner.fragment.MAIN
 import com.xixiaohui.scanner.fragment.MainFragment
 import com.xixiaohui.scanner.utils.SpUtils
 
+//所有的扫描结果
 var resultList: MutableList<Result> = mutableListOf()
-var keyList:MutableList<String> = mutableListOf()
+//所有的key
+var keyList: MutableList<String> = mutableListOf()
+
+//所有的收藏
+var favoritesList:MutableList<Result> = mutableListOf()
+
 
 class MainActivity : AppCompatActivity() {
 //    private lateinit var codeScanner: CodeScanner
@@ -49,7 +55,8 @@ class MainActivity : AppCompatActivity() {
                 Manifest.permission.READ_EXTERNAL_STORAGE
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            ActivityCompat.requestPermissions(this,
+            ActivityCompat.requestPermissions(
+                this,
                 arrayOf(
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     Manifest.permission.CAMERA
@@ -61,7 +68,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar!!.title = this.getString(R.string.main_title)
 
         val trans = supportFragmentManager.beginTransaction()
-        trans.replace(R.id.main_fragment, MainFragment.newInstance("",""), MAIN)
+        trans.replace(R.id.main_fragment, MainFragment.newInstance("", ""), MAIN)
         trans.commit()
 
         initResultList()
@@ -86,10 +93,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initResultList(): Unit {
-        val allRecord  = SpUtils.getAllRecode(baseContext)
+        val allRecord = SpUtils.getAllRecode(this)
         val gson = Gson()
 //        return gson.fromJson(objString, clazz)
-        for((k,v) in allRecord ){
+        for ((k, v) in allRecord) {
 
             val result = gson.fromJson(v as String, Result::class.java)
             resultList.add(result)
@@ -98,17 +105,7 @@ class MainActivity : AppCompatActivity() {
 //        println(resultList)
     }
 
-    companion object {
 
-         fun gotoActivity(activity:Activity,cls: Class<Activity>, result: Result): Unit {
-            val intent = Intent(activity, cls)
-            val mygson = Gson()
-            val objString = mygson.toJson(result)
-            intent.putExtra(MainActivity.DATA.OBJECT.toString(),objString)
-             intent.putExtra(MainActivity.DATA.FROM.toString(),"fromHistory")
-            startActivity(activity,intent,null)
-        }
-    }
 
 
 }

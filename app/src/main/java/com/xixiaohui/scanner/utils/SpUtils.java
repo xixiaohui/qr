@@ -16,6 +16,7 @@ import java.io.StreamCorruptedException;
 import java.lang.reflect.Type;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -521,5 +522,9 @@ public class SpUtils {
         editor.commit();
     }
 
-
+    public static String getDate(Long timeStamp){
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String sd = sdf.format(new Date(Long.parseLong(String.valueOf(timeStamp))));      // 时间戳转换成时间
+        return sd;
+    }
 }
