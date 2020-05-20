@@ -26,7 +26,7 @@ class ScanActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        setContentView(R.layout.activity_scan)
+
         binding = ActivityScanBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -36,25 +36,16 @@ class ScanActivity : AppCompatActivity() {
             this.title = title
         }
 
-//      val bitmap = intent.getParcelableExtra<Bitmap>(MainActivity.DATA.BITMAP.toString())
-//        val text = intent.getStringExtra(MainActivity.DATA.TEXT.toString())
-//        val format = intent.getStringExtra(MainActivity.DATA.FORMAT.toString())
-
         var from = intent.getStringExtra(MainActivity.DATA.FROM.toString())
         val objString = intent.getStringExtra(MainActivity.DATA.OBJECT.toString())
         val gson = Gson()
         val result = gson.fromJson(objString, Result::class.java);
 
-//        val myResult = MyResult(text, format)
         if (from == null){
             saveResult(result)
         }
 
-
-//        val myhisResult = SpUtils.getBean<MyResult>(baseContext, "TEST", MyResult::class.java)
-
         binding.barcodeText.text = result.text
-//      binding.barcodePreview.setImageBitmap(bitmap)
         generateCodeByScannerInfo(result.text, format = result.barcodeFormat)
     }
 

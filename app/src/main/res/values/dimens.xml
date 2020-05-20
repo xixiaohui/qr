@@ -8,4 +8,8 @@
     <dimen name="item_image">35dp</dimen>
 
     <dimen name="item_margin">5dp</dimen>
+
+    <dimen name="item_generate_padding">15dp</dimen>
+    <dimen name="item_generate_margin">30dp</dimen>
+    <dimen name="item_generate_margin_right">42dp</dimen>
 </resources>

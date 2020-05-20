@@ -4,14 +4,118 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorAccent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".activity.GenerateActivity"
     tools:showIn="@layout/activity_generate">
 
-    <TextView
-        android:layout_width="wrap_content"
+
+    <GridLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:text="@string/large_text" />
+        android:layout_margin="@dimen/item_generate_margin"
+        android:orientation="horizontal"
+        android:rowCount="4"
+        android:columnCount="3">
+        <ImageView
+            android:id="@+id/generate_text"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@color/colorWhite"
+            android:padding="@dimen/item_generate_padding"
+            android:layout_marginRight="@dimen/item_generate_margin_right"
+            android:src="@drawable/baseline_text_fields_black_48dp"/>
+        <ImageView
+            android:id="@+id/generate_url"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@color/colorWhite"
+            android:padding="@dimen/item_generate_padding"
+            android:layout_marginRight="@dimen/item_generate_margin_right"
+            android:src="@drawable/baseline_link_black_48dp"/>
+        <ImageView
+            android:id="@+id/generate_wifi"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@color/colorWhite"
+            android:padding="@dimen/item_generate_padding"
+            android:src="@drawable/baseline_wifi_black_48dp"/>
+        <ImageView
+            android:id="@+id/generate_contact"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@color/colorWhite"
+            android:padding="@dimen/item_generate_padding"
+            android:layout_marginTop="@dimen/item_generate_margin_right"
+            android:layout_marginRight="@dimen/item_generate_margin_right"
+            android:src="@drawable/baseline_perm_contact_calendar_black_48dp"/>
+        <ImageView
+            android:id="@+id/generate_app"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@color/colorWhite"
+            android:padding="@dimen/item_generate_padding"
+            android:layout_marginTop="@dimen/item_generate_margin_right"
+            android:layout_marginRight="@dimen/item_generate_margin_right"
+            android:src="@drawable/baseline_apps_black_48dp"/>
+        <ImageView
+            android:id="@+id/generate_email"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@color/colorWhite"
+            android:layout_marginTop="@dimen/item_generate_margin_right"
+            android:padding="@dimen/item_generate_padding"
+            android:src="@drawable/baseline_email_black_48dp"/>
+        <ImageView
+            android:id="@+id/generate_geo"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@color/colorWhite"
+            android:layout_marginTop="@dimen/item_generate_margin_right"
+            android:padding="@dimen/item_generate_padding"
+            android:src="@drawable/baseline_location_on_black_48dp"/>
+        <ImageView
+            android:id="@+id/generate_phone"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@color/colorWhite"
+            android:padding="@dimen/item_generate_padding"
+            android:layout_marginTop="@dimen/item_generate_margin_right"
+            android:layout_marginRight="@dimen/item_generate_margin_right"
+            android:src="@drawable/baseline_phone_black_48dp"/>
+        <ImageView
+            android:id="@+id/generate_event"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@color/colorWhite"
+            android:layout_marginTop="@dimen/item_generate_margin_right"
+            android:padding="@dimen/item_generate_padding"
+            android:src="@drawable/baseline_today_black_48dp"/>
+        <ImageView
+            android:id="@+id/generate_sms"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@color/colorWhite"
+            android:layout_marginTop="@dimen/item_generate_margin_right"
+            android:padding="@dimen/item_generate_padding"
+            android:src="@drawable/baseline_sms_black_48dp"/>
+        <ImageView
+            android:id="@+id/generate_myqr"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@color/colorWhite"
+            android:layout_marginTop="@dimen/item_generate_margin_right"
+            android:padding="@dimen/item_generate_padding"
+            android:src="@drawable/baseline_perm_identity_black_48dp"/>
+        <ImageView
+            android:id="@+id/generate_product"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@color/colorWhite"
+            android:layout_marginTop="@dimen/item_generate_margin_right"
+            android:padding="@dimen/item_generate_padding"
+            android:src="@drawable/baseline_local_grocery_store_black_48dp"/>
+    </GridLayout>
+
 
 </androidx.core.widget.NestedScrollView>
