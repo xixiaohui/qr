@@ -13,6 +13,7 @@ import com.xixiaohui.scanner.fragment.MAIN
 import com.xixiaohui.scanner.fragment.MainFragment
 import com.xixiaohui.scanner.resultList
 
+const val HistoryActivityTag = "HistoryActivityTag"
 class HistoryActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityHistoryBinding
@@ -33,7 +34,7 @@ class HistoryActivity : AppCompatActivity() {
         }
 
         val trans = supportFragmentManager.beginTransaction()
-        trans.replace(R.id.history_fragment, HistoryFragment.newInstance(1, resultList), "HISTORY")
+        trans.replace(R.id.history_fragment, HistoryFragment.newInstance(1, resultList,HistoryActivityTag), "HISTORY")
         trans.commit()
 
     }

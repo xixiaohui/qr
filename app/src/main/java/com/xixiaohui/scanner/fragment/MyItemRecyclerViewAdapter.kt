@@ -1,19 +1,20 @@
 package com.xixiaohui.scanner.fragment
 
 import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.graphics.Typeface
 import android.util.Range
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.fragment.app.Fragment
 import com.google.zxing.Result
 import com.xixiaohui.scanner.*
 import com.xixiaohui.scanner.activity.ScanActivity
+import com.xixiaohui.scanner.utils.MyResult
 import com.xixiaohui.scanner.utils.SpUtils
 
 import kotlinx.android.synthetic.main.fragment_history.view.*
@@ -25,24 +26,21 @@ import java.text.SimpleDateFormat
  */
 
 class MyItemRecyclerViewAdapter(
-    private val values: List<Result>, val fragment: Fragment
-) : RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder>() {
+    private var values: MutableList<MyResult>, private val fragment: Fragment
+) : RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder>(), Filterable {
+
+    var mFilteredArrayList: MutableList<MyResult> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.fragment_history, parent, false)
 
-        var holder = ViewHolder(view)
-
-
-
-        return holder
+        return ViewHolder(view)
     }
 
-
-
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = values[position]
+        val myResult = values[position]
+        val item = values[position].result ?: return
 
         val type = HistoryFragment.getType(item)
         holder.itemType.text = type.toString()
@@ -65,35 +63,40 @@ class MyItemRecyclerViewAdapter(
             if (holder.itemStar.tag == "unselect") {
                 holder.itemStar.setImageResource(R.drawable.baseline_star_black_48dp)
                 holder.itemStar.tag = "select"
-                favoritesList.add(item)
+                myResult.favorite = true
 
+                val frag = fragment as HistoryFragment
+                frag.refreshResult(myResult, position)
             } else {
                 holder.itemStar.setImageResource(R.drawable.baseline_star_border_black_48dp)
                 holder.itemStar.tag = "unselect"
-                favoritesList.remove(item)
+                myResult.favorite = false
 
+                val frag = fragment as HistoryFragment
+                frag.refreshResult(myResult, position)
             }
         }
-        if (favoritesList.contains(item)){
+
+        if (values[position].favorite) {
             holder.itemStar.setImageResource(R.drawable.baseline_star_black_48dp)
             holder.itemStar.tag = "select"
         }
 
         //响应事件
-        holder.contentView.setOnClickListener{
+        holder.contentView.setOnClickListener {
             val frag = fragment as HistoryFragment
-            frag.gotoActivity(ScanActivity::class.java as Class<Activity>,item)
-        }
-        holder.itemImage.setOnClickListener{
-            val frag = fragment as HistoryFragment
-            frag.gotoActivity(ScanActivity::class.java as Class<Activity>,item)
+            frag.gotoActivity(ScanActivity::class.java as Class<Activity>, item)
         }
 
-        holder.itemMore.setOnClickListener{
-            SpUtils.remove(fragment.context,keyList[position])
-            resultList.removeAt(position)
-            notifyDataSetChanged()
+        holder.itemImage.setOnClickListener {
+            val frag = fragment as HistoryFragment
+            frag.gotoActivity(ScanActivity::class.java as Class<Activity>, item)
+        }
 
+        holder.itemMore.setOnClickListener {
+//            SpUtils.remove(fragment.context, keyList[position])
+//            resultList.removeAt(position)
+//            notifyDataSetChanged()
         }
     }
 
@@ -108,4 +111,28 @@ class MyItemRecyclerViewAdapter(
         val itemMore = view.item_more
 
     }
+
+    override fun getFilter(): Filter {
+        return object : Filter() {
+
+            // 执行过滤操作
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val result = FilterResults()
+                for (item in values) {
+                    if (item.favorite) {
+                        mFilteredArrayList.add(item)
+                    }
+                }
+                result.values = mFilteredArrayList
+                return result
+            }
+
+            //把过滤后的值返回出来
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                values = results!!.values as MutableList<MyResult>
+                notifyDataSetChanged()
+            }
+        }
+    }
+
 }

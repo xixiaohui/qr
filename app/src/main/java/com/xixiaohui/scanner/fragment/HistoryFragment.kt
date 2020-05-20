@@ -18,11 +18,16 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.Result
 import com.xixiaohui.scanner.MainActivity
 import com.xixiaohui.scanner.R
+import com.xixiaohui.scanner.activity.FavoriteActivityTag
 import com.xixiaohui.scanner.databinding.FragmentHistoryBinding
 import com.xixiaohui.scanner.databinding.FragmentHistoryListBinding
+import com.xixiaohui.scanner.keyList
 import com.xixiaohui.scanner.resultList
+import com.xixiaohui.scanner.utils.MyResult
+import com.xixiaohui.scanner.utils.SpUtils
 import java.io.Serializable
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 /**
@@ -34,17 +39,19 @@ class HistoryFragment : Fragment() {
 
     lateinit var binding: FragmentHistoryListBinding
 
-    private lateinit var data:MutableList<Result>
+    private lateinit var data: MutableList<MyResult>
+
+    private lateinit var myTag:String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         arguments?.let {
             columnCount = it.getInt(ARG_COLUMN_COUNT)
-            data = it.getSerializable(DATA) as MutableList<Result>
+            myTag = it.getString(TAG).toString()
         }
 
-
+        data = resultList
     }
 
     override fun onCreateView(
@@ -66,16 +73,20 @@ class HistoryFragment : Fragment() {
                         data, this@HistoryFragment
                     )
 
+                if (myTag == FavoriteActivityTag){
+                    val myad = adapter as MyItemRecyclerViewAdapter
+                    myad.filter.filter(data.toString())
+                }
+
             }
         }
         binding.list.setItemViewCacheSize(5000)
 
+
         binding.list.addOnItemClickListener(object : OnItemClickListener {
             override fun onItemClicked(position: Int, view: View, holder: RecyclerView.ViewHolder) {
-
 //                Toast.makeText(context, "position" + position, Toast.LENGTH_LONG).show()
 //                var holder = holder as MyItemRecyclerViewAdapter.ViewHolder
-
             }
         })
 
@@ -87,16 +98,20 @@ class HistoryFragment : Fragment() {
         // TODO: Customize parameter argument names
         const val ARG_COLUMN_COUNT = "column-count"
         const val DATA = "DATA"
+        const val TAG = "TAG"
 
         // TODO: Customize parameter initialization
         @JvmStatic
-        fun newInstance(columnCount: Int,data:MutableList<Result>) =
-            HistoryFragment().apply {
+        fun newInstance(columnCount: Int, data: MutableList<MyResult>,tag:String): Fragment {
+
+            val fragment = HistoryFragment().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_COLUMN_COUNT, columnCount)
-                    putSerializable(DATA,data as Serializable)
+                    putString(TAG,tag)
                 }
             }
+            return fragment
+        }
 
         fun getType(result: Result): CodeType {
 
@@ -105,7 +120,7 @@ class HistoryFragment : Fragment() {
             }
 
             var text = result.text.toLowerCase()
-            if (text.startsWith("mecard:")||text.startsWith("vcard:")) {
+            if (text.startsWith("mecard:") || text.startsWith("vcard:")) {
                 return CodeType.CONTACT
             } else if (text.startsWith("mailto:")) {
                 return CodeType.EMAIL
@@ -188,14 +203,19 @@ class HistoryFragment : Fragment() {
     }
 
 
-    public fun gotoActivity(cls: Class<Activity>, result: Result): Unit {
+    fun gotoActivity(cls: Class<Activity>, result: Result): Unit {
         val intent = Intent(this.context, cls)
 
         val mygson = Gson()
         val objString = mygson.toJson(result)
 
-        intent.putExtra(MainActivity.DATA.OBJECT.toString(),objString)
+        intent.putExtra(MainActivity.DATA.OBJECT.toString(), objString)
         intent.putExtra(MainActivity.DATA.FROM.toString(), "NotFreshCode")
         startActivity(intent)
+    }
+
+    fun refreshResult(myResult: MyResult, position: Int) {
+        var key = keyList[position]
+        SpUtils.saveBean(this.context, key, myResult)
     }
 }

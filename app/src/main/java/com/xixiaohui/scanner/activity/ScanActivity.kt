@@ -12,12 +12,13 @@ import com.xixiaohui.scanner.R
 import com.xixiaohui.scanner.databinding.ActivityScanBinding
 import com.xixiaohui.scanner.keyList
 import com.xixiaohui.scanner.resultList
+import com.xixiaohui.scanner.utils.MyResult
 import com.xixiaohui.scanner.utils.SpUtils
 
 /**
  * 扫描详情页
  */
-data class MyResult(val text: String, val format: String)
+//data class MyResult(val text: String, val format: String)
 
 class ScanActivity : AppCompatActivity() {
 
@@ -84,8 +85,9 @@ class ScanActivity : AppCompatActivity() {
 
     private fun saveResult(myResult:Result){
         var key  = SpUtils.randomKey()
-        SpUtils.saveBean(baseContext, key, myResult)
-        resultList.add(myResult)
+        val saveResult = MyResult(myResult)
+        SpUtils.saveBean(baseContext, key, saveResult)
+        resultList.add(saveResult)
         keyList.add(key)
     }
 

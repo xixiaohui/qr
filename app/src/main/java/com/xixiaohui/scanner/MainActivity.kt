@@ -16,20 +16,17 @@ import com.google.zxing.client.android.BeepManager
 import com.google.zxing.integration.android.IntentIntegrator
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
-import com.xixiaohui.scanner.activity.MyResult
 import com.xixiaohui.scanner.databinding.ActivityMainBinding
 import com.xixiaohui.scanner.fragment.HistoryFragment
 import com.xixiaohui.scanner.fragment.MAIN
 import com.xixiaohui.scanner.fragment.MainFragment
+import com.xixiaohui.scanner.utils.MyResult
 import com.xixiaohui.scanner.utils.SpUtils
 
 //所有的扫描结果
-var resultList: MutableList<Result> = mutableListOf()
+var resultList: MutableList<MyResult> = mutableListOf()
 //所有的key
 var keyList: MutableList<String> = mutableListOf()
-
-//所有的收藏
-var favoritesList:MutableList<Result> = mutableListOf()
 
 
 class MainActivity : AppCompatActivity() {
@@ -38,7 +35,6 @@ class MainActivity : AppCompatActivity() {
     private val MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1
 
     lateinit var binding: ActivityMainBinding
-
 
     enum class DATA {
         OBJECT,
@@ -96,9 +92,12 @@ class MainActivity : AppCompatActivity() {
         val allRecord = SpUtils.getAllRecode(this)
         val gson = Gson()
 //        return gson.fromJson(objString, clazz)
+        if(allRecord == null){
+            return
+        }
         for ((k, v) in allRecord) {
 
-            val result = gson.fromJson(v as String, Result::class.java)
+            val result = gson.fromJson(v as String, MyResult::class.java)
             resultList.add(result)
             keyList.add(k)
         }

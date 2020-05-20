@@ -5,10 +5,12 @@ import android.os.Bundle
 import android.view.MenuItem
 import com.xixiaohui.scanner.R
 import com.xixiaohui.scanner.databinding.ActivityFavoriteBinding
-import com.xixiaohui.scanner.favoritesList
+
 import com.xixiaohui.scanner.fragment.HistoryFragment
 import com.xixiaohui.scanner.resultList
 
+
+const val FavoriteActivityTag = "FavoriteActivityTag"
 class FavoriteActivity : AppCompatActivity() {
 
     lateinit var binding:ActivityFavoriteBinding
@@ -27,7 +29,7 @@ class FavoriteActivity : AppCompatActivity() {
         }
 
         val trans = supportFragmentManager.beginTransaction()
-        trans.replace(R.id.favorite_fragment, HistoryFragment.newInstance(1, favoritesList), "HISTORY")
+        trans.replace(R.id.favorite_fragment, HistoryFragment.newInstance(1, resultList,FavoriteActivityTag), "FAVORITE")
         trans.commit()
     }
 
