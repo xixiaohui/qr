@@ -30,9 +30,7 @@
             <!-- </intent-filter> -->
         </activity>
         <activity
-            android:name=".activity.GenerateActivity"
-            android:label="@string/title_activity_generate"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:name=".activity.GenerateActivity" />
         <activity
             android:name=".activity.SettingsActivity"
             android:label="@string/title_activity_settings" />

@@ -37,10 +37,11 @@ class GenerateActivity : AppCompatActivity() {
         binding = ActivityGenerateBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        setSupportActionBar(toolbar)
-//        this.supportActionBar.apply {
-//            this!!.setDisplayHomeAsUpEnabled(true)
-//        }
+        val title = this.getString(R.string.generate)
+        this.supportActionBar.apply {
+            this!!.setDisplayHomeAsUpEnabled(true)
+            this.title = title
+        }
 
         textFragment = GenerateTextFragment()
         wifiFragment = GenerateWifiFragment()
@@ -57,27 +58,41 @@ class GenerateActivity : AppCompatActivity() {
 
 
         val fm = supportFragmentManager
-        fm.beginTransaction().add(R.id.generate_container, GenerateMainFragment()).commit()
+        fm.beginTransaction().replace(R.id.generate_container, GenerateMainFragment()).commit()
 
 
     }
 
     fun doNextFragment(view: View) {
-
         val id = view.id
         val fm = supportFragmentManager
-        when(id){
-            R.id.generate_text->fm.beginTransaction().replace(R.id.generate_container, textFragment).commit()
-            R.id.generate_url ->fm.beginTransaction().replace(R.id.generate_container, urlFragment).commit()
-            R.id.generate_wifi ->fm.beginTransaction().replace(R.id.generate_container, wifiFragment).commit()
-            R.id.generate_contact ->fm.beginTransaction().replace(R.id.generate_container, contactFragment).commit()
-            R.id.generate_app ->fm.beginTransaction().replace(R.id.generate_container, appFragment).commit()
-            R.id.generate_email ->fm.beginTransaction().replace(R.id.generate_container, emailFragment).commit()
-            R.id.generate_phone ->fm.beginTransaction().replace(R.id.generate_container, phoneFragment).commit()
-            R.id.generate_event ->fm.beginTransaction().replace(R.id.generate_container, eventFragment).commit()
-            R.id.generate_sms ->fm.beginTransaction().replace(R.id.generate_container, smsFragment).commit()
-            R.id.generate_myqr ->fm.beginTransaction().replace(R.id.generate_container, myqrFragment).commit()
-            R.id.generate_product ->fm.beginTransaction().replace(R.id.generate_container, productFragment).commit()
+        val ft = fm.beginTransaction()
+            .setCustomAnimations(R.animator.slide_right_in, R.animator.slide_left_out)
+        when (id) {
+            R.id.generate_text ->
+                ft.replace(R.id.generate_container, textFragment).addToBackStack(null).commit()
+            R.id.generate_url -> ft.replace(R.id.generate_container, urlFragment)
+                .addToBackStack(null).commit()
+            R.id.generate_wifi -> ft
+                .replace(R.id.generate_container, wifiFragment).addToBackStack(null).commit()
+            R.id.generate_contact -> ft
+                .replace(R.id.generate_container, contactFragment).addToBackStack(null).commit()
+            R.id.generate_app -> ft.replace(R.id.generate_container, appFragment)
+                .addToBackStack(null).commit()
+            R.id.generate_email -> ft
+                .replace(R.id.generate_container, emailFragment).addToBackStack(null).commit()
+            R.id.generate_phone -> ft
+                .replace(R.id.generate_container, phoneFragment).addToBackStack(null).commit()
+            R.id.generate_event -> ft
+                .replace(R.id.generate_container, eventFragment).addToBackStack(null).commit()
+            R.id.generate_sms -> ft.replace(R.id.generate_container, smsFragment)
+                .addToBackStack(null).commit()
+            R.id.generate_myqr -> ft
+                .replace(R.id.generate_container, myqrFragment).addToBackStack(null).commit()
+            R.id.generate_product -> ft
+                .replace(R.id.generate_container, productFragment).addToBackStack(null).commit()
+            R.id.generate_geo -> ft.replace(R.id.generate_container, geoFragment)
+                .addToBackStack(null).commit()
         }
     }
 
@@ -85,7 +100,13 @@ class GenerateActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-                finish()
+                if (supportFragmentManager.backStackEntryCount == 0)
+                    finish()
+                else{
+                    supportFragmentManager.popBackStack()
+                }
+
+
                 true
             }
             else -> false
