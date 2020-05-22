@@ -38,4 +38,23 @@
     <string name="hello_blank_fragment">Hello generate text fragment</string>
 
 
+    <string name="your_name">Your Name:</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="contact">Contact:</string>
+    <string name="mobile">Mobile</string>
+    <string name="phone">Phone</string>
+    <string name="fax">Fax</string>
+    <string name="email">Email:</string>
+    <string name="email_text">Email</string>
+    <string name="company">Company:</string>
+    <string name="company_name">Company</string>
+    <string name="your_job">Your Job</string>
+    <string name="street">Street:</string>
+    <string name="city">City:</string>
+    <string name="zip">ZIP</string>
+    <string name="state">State:</string>
+    <string name="country">Country:</string>
+    <string name="website">Website:</string>
+
 </resources>
