@@ -28,6 +28,7 @@
             android:textSize="@dimen/text_vcard"></TextView>
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/myqr_first_name"
             android:layout_width="130dp"
             android:layout_height="wrap_content"
             android:textCursorDrawable="@drawable/color_cursor"
@@ -37,6 +38,7 @@
             android:padding="@dimen/text_padding" />
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/myqr_last_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textCursorDrawable="@drawable/color_cursor"
@@ -66,6 +68,7 @@
             android:textSize="@dimen/text_vcard"></TextView>
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/myqr_mobile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/vcard_margin_right"
@@ -88,6 +91,7 @@
         app:layout_constraintVertical_bias="0.234">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/myqr_phone"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/vcard_margin_right"
@@ -96,6 +100,7 @@
             android:padding="@dimen/text_padding"
             android:textCursorDrawable="@drawable/color_cursor" />
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/myqr_fax"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/vcard_margin_right"
@@ -124,6 +129,7 @@
             android:text="@string/email"
             android:textSize="@dimen/text_vcard"></TextView>
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/myqr_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/vcard_margin_right"
@@ -152,6 +158,7 @@
             android:textSize="@dimen/text_vcard"></TextView>
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/myqr_company"
             android:layout_width="130dp"
             android:layout_height="wrap_content"
             android:textCursorDrawable="@drawable/color_cursor"
@@ -161,6 +168,7 @@
             android:padding="@dimen/text_padding" />
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/myqr_your_job"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textCursorDrawable="@drawable/color_cursor"
@@ -189,6 +197,7 @@
             android:textSize="@dimen/text_vcard"></TextView>
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/myqr_street"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/vcard_margin_right"
@@ -199,6 +208,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/linearLayout8"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -217,12 +227,13 @@
             android:textSize="@dimen/text_vcard"></TextView>
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/myqr_city"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/vcard_margin_right"
             android:background="@drawable/textview_border"
-            android:textCursorDrawable="@drawable/color_cursor"
-            android:padding="@dimen/text_padding" />
+            android:padding="@dimen/text_padding"
+            android:textCursorDrawable="@drawable/color_cursor" />
 
     </LinearLayout>
 
@@ -245,6 +256,7 @@
             android:textSize="@dimen/text_vcard"></TextView>
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/myqr_zip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/vcard_margin_right"
@@ -274,6 +286,7 @@
             android:textSize="@dimen/text_vcard"></TextView>
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/myqr_state"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/vcard_margin_right"
@@ -284,6 +297,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/linearLayout7"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -302,12 +316,13 @@
             android:textSize="@dimen/text_vcard"></TextView>
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/myqr_country"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/vcard_margin_right"
             android:background="@drawable/textview_border"
-            android:textCursorDrawable="@drawable/color_cursor"
-            android:padding="@dimen/text_padding" />
+            android:padding="@dimen/text_padding"
+            android:textCursorDrawable="@drawable/color_cursor" />
 
     </LinearLayout>
 
@@ -331,6 +346,7 @@
             android:textSize="@dimen/text_vcard"></TextView>
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/myqr_website"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/vcard_margin_right"
@@ -340,15 +356,16 @@
 
     </LinearLayout>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/but_mqr_generate"
-        android:text="@string/Generator"
+    <Button
+        android:id="@+id/myqr_generate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorAccent"
-        android:textColor="@color/colorPrimary"
+        android:text="@string/generate"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.976"
-        tools:layout_editor_absoluteX="0dp" />
+        app:layout_constraintVertical_bias="0.976" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

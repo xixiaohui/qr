@@ -1,5 +1,7 @@
 package com.xixiaohui.scanner.activity
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -7,12 +9,35 @@ import android.widget.ImageView
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.startActivity
 import com.xixiaohui.scanner.R
 import com.xixiaohui.scanner.databinding.ActivityGenerateBinding
 import com.xixiaohui.scanner.fragment.*
 
 import kotlinx.android.synthetic.main.activity_generate.*
 import kotlinx.android.synthetic.main.fragment_generate_main.*
+
+
+interface GenerateString{
+
+    fun assembleResult():String
+
+    fun getFormat():String
+
+    fun createIntent(context: Context):Intent{
+        val intent = Intent(context, GenerateResultActivity::class.java)
+        val result = assembleResult()
+        intent.putExtra(
+            GenerateResultActivity.GenerateResultActivityData.RESULT.toString(),
+            result
+        )
+        intent.putExtra(
+            GenerateResultActivity.GenerateResultActivityData.FORMAT.toString(),
+            getFormat()
+        )
+        return intent
+    }
+}
 
 class GenerateActivity : AppCompatActivity() {
 

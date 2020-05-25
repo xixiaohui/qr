@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.xixiaohui.scanner.R
 import com.xixiaohui.scanner.activity.GenerateResultActivity
+import com.xixiaohui.scanner.activity.GenerateString
 import com.xixiaohui.scanner.activity.ScanActivity
 import com.xixiaohui.scanner.databinding.FragmentGenerateMyqrBinding
 import java.util.*
@@ -22,25 +23,20 @@ private const val ARG_PARAM2 = "param2"
  * Use the [GenerateMyqrFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class GenerateMyqrFragment : Fragment() {
+class GenerateMyqrFragment : Fragment(), GenerateString {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
 
     lateinit var binding: FragmentGenerateMyqrBinding
 
-    var result: String = "hello"
-    var format: String = "QR_CODE"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-
-
-
-
 
     }
 
@@ -52,17 +48,9 @@ class GenerateMyqrFragment : Fragment() {
 
         binding = FragmentGenerateMyqrBinding.inflate(layoutInflater)
 
+        binding.myqrGenerate.setOnClickListener {
 
-        binding.butMqrGenerate.setOnClickListener {
-            val intent = Intent(this.context, GenerateResultActivity::class.java)
-            intent.putExtra(
-                GenerateResultActivity.GenerateResultActivityData.RESULT.toString(),
-                result
-            )
-            intent.putExtra(
-                GenerateResultActivity.GenerateResultActivityData.FORMAT.toString(),
-                format
-            )
+            val intent = createIntent(activity!!.baseContext)
             startActivity(intent)
         }
 
@@ -88,4 +76,26 @@ class GenerateMyqrFragment : Fragment() {
                 }
             }
     }
+
+    override fun assembleResult(): String {
+        var result = "BEGIN:VCARD" + "\n"
+        result += "N:" + binding.myqrFirstName.text.toString() + ";" + binding.myqrLastName.text.toString() + ";" + "\n"
+        result += "TEL;TYPE=work,VOICE:" + binding.myqrMobile.text.toString() + "\n"
+        result += "TEL;TYPE=home,VOICE:" + binding.myqrPhone.text.toString() + "\n"
+        result += "TEL;TYPE=fax:" + binding.myqrFax.text.toString() + "\n"
+        result += "EMAIL:" + binding.myqrEmail.text.toString() + "\n"
+        result += "ORG:" + binding.myqrCompany.text.toString() + "\n"
+        result += "TITLE:" + binding.myqrYourJob.text.toString() + "\n"
+        result += "ADR;TYPE=WORK,PREF:;;" + binding.myqrStreet.text.toString() + "\n"
+        result += "URL:" + binding.myqrWebsite.text.toString() + "\n"
+        result += "VERSION:3.0" + "\n"
+        result += "END:VCARD"
+        return result
+    }
+
+    override fun getFormat(): String {
+        return "QR_CODE"
+    }
+
+
 }

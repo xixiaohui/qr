@@ -11,10 +11,13 @@
 
     <dimen name="item_generate_padding">15dp</dimen>
     <dimen name="item_generate_margin">30dp</dimen>
+    <dimen name="item_generate_margin_top">15dp</dimen>
     <dimen name="item_generate_margin_right">42dp</dimen>
     
     <dimen name="text_vcard">20dp</dimen>
     <dimen name="text_padding">10dp</dimen>
     <dimen name="vcard_margin_right">10dp</dimen>
     <dimen name="vcard_margin_left">85dp</dimen>
+    
+    <dimen name="sippner_height">40dp</dimen>
 </resources>

@@ -1,11 +1,20 @@
 package com.xixiaohui.scanner.fragment
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
+import android.icu.util.Calendar
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.text.Editable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.DatePicker
+import android.widget.TimePicker
+import androidx.fragment.app.Fragment
 import com.xixiaohui.scanner.R
+import com.xixiaohui.scanner.activity.GenerateActivity
+import com.xixiaohui.scanner.databinding.FragmentGenerateEventBinding
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -18,9 +27,15 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class GenerateEventFragment : Fragment() {
+    private val TAG = "tzbc"
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private var calendar: Calendar? = null
+
+    lateinit var binding:FragmentGenerateEventBinding
+    lateinit var datePickerDialog:DatePickerDialog
+    lateinit var timePickerDialog:TimePickerDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +43,9 @@ class GenerateEventFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+
+        calendar = Calendar.getInstance()
+
     }
 
     override fun onCreateView(
@@ -35,7 +53,12 @@ class GenerateEventFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_generate_event, container, false)
+        binding = FragmentGenerateEventBinding.inflate(layoutInflater)
+
+        binding.eventGenerate.setOnClickListener{
+            showCalenderDialog()
+        }
+        return binding.root
     }
 
     companion object {
@@ -57,4 +80,30 @@ class GenerateEventFragment : Fragment() {
                 }
             }
     }
+
+    private fun showCalenderDialog(){
+        datePickerDialog = DatePickerDialog(context!!,
+            DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+                val calender =
+                    year.toString() + "年" + (month + 1) + "月" + dayOfMonth + "日"
+                Log.e(TAG, "calender : $calender")
+                binding.inputStart.text = Editable.Factory.getInstance().newEditable(calender)
+
+                showTimeDialog()
+            },calendar!!.get(Calendar.YEAR),calendar!!.get(Calendar.MONTH),calendar!!.get(Calendar.DAY_OF_MONTH))
+
+        datePickerDialog.show()
+    }
+
+    fun showTimeDialog() {
+        timePickerDialog = TimePickerDialog(context!!,
+            TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
+                var time = hourOfDay.toString() + "时" + minute + "分";
+                Log.e(TAG, "time : " + time);
+                binding.inputEnd.text = Editable.Factory.getInstance().newEditable(time)
+
+            }, calendar!!.get(Calendar.HOUR_OF_DAY), calendar!!.get(Calendar.MINUTE), true);
+        timePickerDialog.show();
+    }
+
 }

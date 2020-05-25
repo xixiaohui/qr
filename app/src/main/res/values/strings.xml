@@ -57,4 +57,35 @@
     <string name="country">Country:</string>
     <string name="website">Website:</string>
 
+    <string name="email_title">Title:</string>
+    <string name="email_content">Content:</string>
+
+    <string name="generate_barcode_code">Generate Barcode Code</string>
+
+    <string name="generate_qr_code">Generate QR Code</string>
+    <string name="generate_url">*URL:</string>
+
+    <string name="generate_ssid">*SSID:(Network Id)</string>
+    <string name="generate_password">Password:</string>
+    <string name="generate_network_type">Network Type:</string>
+
+
+    <string-array name="wifi_type">
+        <item>WEP</item>
+        <item>WPA/WPA2</item>
+        <item>Not Secured</item>
+    </string-array>
+    
+    <string name="latitude">*Latitude:(Ex:40.860284)</string>
+    <string name="longitude">*Longitude:(Ex:-73.183363)</string>
+    <string name="qurey_string">Query String:</string>
+
+    <string name="text">Text:</string>
+
+    <string name="event_title">Title</string>
+    <string name="event_geo">Address</string>
+    <string name="event_start">Start:</string>
+    <string name="event_end">End:</string>
+
+
 </resources>

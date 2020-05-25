@@ -1,14 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".fragment.GenerateUrlFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/generate_url"
+        android:textSize="@dimen/text_vcard"
+        android:layout_marginLeft="@dimen/item_generate_margin"
 
-</FrameLayout>
+        android:layout_marginTop="@dimen/item_generate_margin_top"/>
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/input_url"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/item_generate_margin"
+        android:layout_marginRight="@dimen/item_generate_margin"
+        android:layout_marginTop="@dimen/item_generate_margin_top" />
+
+    <Button
+        android:id="@+id/email_generate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:text="@string/generate_qr_code"
+        android:layout_marginLeft="@dimen/item_generate_margin"
+        android:layout_marginRight="@dimen/item_generate_margin"
+        android:layout_marginTop="@dimen/item_generate_margin_top"/>
+
+</LinearLayout>

@@ -2,6 +2,7 @@ package com.xixiaohui.scanner.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.annotation.VisibleForTesting
 import com.google.zxing.BarcodeFormat
 import com.journeyapps.barcodescanner.BarcodeEncoder
@@ -25,11 +26,28 @@ class GenerateResultActivity : AppCompatActivity() {
         binding = ActivityGenerateResultBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val title = this.getString(R.string.generate)
+        this.supportActionBar.apply {
+            this!!.setDisplayHomeAsUpEnabled(true)
+            this.title = title
+        }
+
         result = intent.getStringExtra(GenerateResultActivityData.RESULT.toString())
         format = intent.getStringExtra(GenerateResultActivityData.FORMAT.toString())
 
         binding.barcodeText.text = result
         generateCodeByScannerInfo(result, format = BarcodeFormat.valueOf(format))
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            android.R.id.home->{
+                finish()
+                true
+            }
+            else->false
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun generateCodeByScannerInfo(contents: String, format: BarcodeFormat): Unit {
