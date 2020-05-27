@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.xixiaohui.scanner.R
+import com.xixiaohui.scanner.activity.GenerateString
+import com.xixiaohui.scanner.databinding.FragmentGenerateTextBinding
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -17,10 +19,12 @@ private const val ARG_PARAM2 = "param2"
  * Use the [GenerateTextFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class GenerateTextFragment : Fragment() {
+class GenerateTextFragment : Fragment() , GenerateString {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+
+    private lateinit var binding :FragmentGenerateTextBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,8 +38,13 @@ class GenerateTextFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        binding = FragmentGenerateTextBinding.inflate(layoutInflater)
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_generate_text, container, false)
+        binding.textGenerate.setOnClickListener{
+            val intent = createIntent(activity!!.baseContext)
+            startActivity(intent)
+        }
+        return binding.root
     }
 
     companion object {
@@ -56,5 +65,13 @@ class GenerateTextFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    override fun assembleResult(): String {
+        return binding.inputText.text.toString()
+    }
+
+    override fun getFormat(): String {
+        return "QR_CODE"
     }
 }

@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.xixiaohui.scanner.R
+import com.xixiaohui.scanner.activity.GenerateString
+import com.xixiaohui.scanner.databinding.FragmentGenerateWifiBinding
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -17,10 +19,12 @@ private const val ARG_PARAM2 = "param2"
  * Use the [GenerateWifiFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class GenerateWifiFragment : Fragment() {
+class GenerateWifiFragment : Fragment(), GenerateString {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+
+    private lateinit var binding: FragmentGenerateWifiBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,14 +32,20 @@ class GenerateWifiFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_generate_wifi, container, false)
+        binding = FragmentGenerateWifiBinding.inflate(layoutInflater)
+
+        binding.wifiGenerate.setOnClickListener {
+            val intent = createIntent(activity!!.baseContext)
+            startActivity(intent)
+        }
+        return binding.root
     }
 
     companion object {
@@ -56,5 +66,16 @@ class GenerateWifiFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    override fun assembleResult(): String {
+        return "WIFI:" +
+                "T:" + binding.choiceType.selectedItem.toString() + ";" +
+                "S:" + binding.inputSsid.text.toString() + ";" +
+                "P:" + binding.inputPassword.text.toString() + ";;"
+    }
+
+    override fun getFormat(): String {
+        return "QR_CODE"
     }
 }

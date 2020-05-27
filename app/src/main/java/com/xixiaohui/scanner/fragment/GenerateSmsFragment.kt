@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.xixiaohui.scanner.R
+import com.xixiaohui.scanner.activity.GenerateString
+import com.xixiaohui.scanner.databinding.FragmentGenerateSmsBinding
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -17,10 +19,12 @@ private const val ARG_PARAM2 = "param2"
  * Use the [GenerateSmsFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class GenerateSmsFragment : Fragment() {
+class GenerateSmsFragment : Fragment(), GenerateString {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+
+    private lateinit var binding: FragmentGenerateSmsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,8 +38,14 @@ class GenerateSmsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        binding = FragmentGenerateSmsBinding.inflate(layoutInflater)
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_generate_sms, container, false)
+        binding.smsGenerate.setOnClickListener{
+            val intent = createIntent(activity!!.baseContext)
+            startActivity(intent)
+        }
+
+        return binding.root
     }
 
     companion object {
@@ -56,5 +66,13 @@ class GenerateSmsFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    override fun assembleResult(): String {
+        return "smsto:" + binding.inputPhoneSms.text.toString() + ":" + binding.inputContentSms.text.toString()
+    }
+
+    override fun getFormat(): String {
+        return "QR_CODE"
     }
 }

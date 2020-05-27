@@ -8,7 +8,7 @@
 
 
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/input_phone_sms"
+        android:id="@+id/input_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/event_title"
@@ -25,24 +25,46 @@
         android:layout_marginRight="@dimen/item_generate_margin"
         android:layout_marginTop="@dimen/item_generate_margin_top" />
 
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/input_start"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/input_start"
+            android:layout_width="260dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/item_generate_margin"
+            android:layout_marginTop="@dimen/item_generate_margin_top"
+            android:layout_marginRight="@dimen/item_generate_margin"
+            android:hint="@string/event_start" />
+        <ImageView
+            android:id="@+id/set_start_time"
+            android:src="@drawable/baseline_access_time_black_48dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="@dimen/item_generate_margin_top"/>
+    </LinearLayout>
 
-        android:layout_marginLeft="@dimen/item_generate_margin"
-        android:layout_marginTop="@dimen/item_generate_margin_top"
-        android:layout_marginRight="@dimen/item_generate_margin"
-        android:hint="@string/event_start" />
-
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/input_end"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/event_end"
-        android:layout_marginLeft="@dimen/item_generate_margin"
-        android:layout_marginRight="@dimen/item_generate_margin"
-        android:layout_marginTop="@dimen/item_generate_margin_top" />
+        android:orientation="horizontal">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/input_end"
+            android:layout_width="260dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/event_end"
+            android:layout_marginLeft="@dimen/item_generate_margin"
+            android:layout_marginRight="@dimen/item_generate_margin"
+            android:layout_marginTop="@dimen/item_generate_margin_top" />
+        <ImageView
+            android:id="@+id/set_end_time"
+            android:src="@drawable/baseline_access_time_black_48dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="@dimen/item_generate_margin_top"/>
+    </LinearLayout>
+
 
 <!--    <CalendarView-->
 <!--        android:layout_width="match_parent"-->

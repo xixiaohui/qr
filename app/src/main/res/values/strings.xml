@@ -87,5 +87,20 @@
     <string name="event_start">Start:</string>
     <string name="event_end">End:</string>
 
+    <string-array name="product_type">
+        <item>EAN_8</item>
+        <item>EAN_13</item>
+        <item>UPC_E</item>
+        <item>UPC_A</item>
+        <item>CODE_39</item>
+        <item>CODE_93</item>
+        <item>CODE_128</item>
+        <item>ITF</item>
+        <item>PDF_417</item>
+        <item>CODABAR</item>
+        <item>DATA_MATRIX</item>
+        <item>AZTEC</item>
+    </string-array>
+
 
 </resources>

@@ -5,15 +5,16 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
 import com.google.zxing.BarcodeFormat
+import com.google.zxing.EncodeHintType
 import com.google.zxing.Result
 import com.journeyapps.barcodescanner.BarcodeEncoder
-import com.xixiaohui.scanner.MainActivity
-import com.xixiaohui.scanner.R
+import com.xixiaohui.scanner.*
+import com.xixiaohui.scanner.QRCodeDecoder.HINTS
 import com.xixiaohui.scanner.databinding.ActivityScanBinding
-import com.xixiaohui.scanner.keyList
-import com.xixiaohui.scanner.resultList
 import com.xixiaohui.scanner.utils.MyResult
 import com.xixiaohui.scanner.utils.SpUtils
+import java.util.*
+
 
 /**
  * 扫描详情页
@@ -41,12 +42,13 @@ class ScanActivity : AppCompatActivity() {
         val gson = Gson()
         val result = gson.fromJson(objString, Result::class.java);
 
-        if (from == null){
+        if (from == null) {
             saveResult(result)
         }
 
-        binding.barcodeText.text = result.text
-        generateCodeByScannerInfo(result.text, format = result.barcodeFormat)
+        val contents = String(result.text.toByteArray(Charsets.UTF_8))
+        binding.barcodeText.text = contents
+        generateCodeByScannerInfo(contents, format = result.barcodeFormat)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -63,19 +65,22 @@ class ScanActivity : AppCompatActivity() {
     private fun generateCodeByScannerInfo(contents: String, format: BarcodeFormat): Unit {
         try {
             val barcodeEncoder = BarcodeEncoder()
+            var hints:Map<EncodeHintType, String> = mutableMapOf(EncodeHintType.CHARACTER_SET to "utf-8")
+
             val bitmap = barcodeEncoder.encodeBitmap(
                 contents,
-                format, 900, 900
+                format, 900, 900, hints
             )
             val imageViewQrCode = binding.barcodePreview
             imageViewQrCode.setImageBitmap(bitmap)
+
         } catch (e: Exception) {
 
         }
     }
 
-    private fun saveResult(myResult:Result){
-        var key  = SpUtils.randomKey()
+    private fun saveResult(myResult: Result) {
+        var key = SpUtils.randomKey()
         val saveResult = MyResult(myResult)
         SpUtils.saveBean(baseContext, key, saveResult)
         resultList.add(saveResult)
