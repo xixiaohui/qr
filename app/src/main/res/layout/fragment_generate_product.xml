@@ -16,13 +16,13 @@
         android:layout_marginTop="@dimen/item_generate_margin_top"
         android:dropDownWidth="match_parent"
         android:entries="@array/product_type"/>
-    <TextView
-        android:id="@+id/format_tips"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/text_barcode"
-        android:layout_marginLeft="@dimen/item_generate_margin"
-        android:layout_marginRight="@dimen/item_generate_margin"/>
+<!--    <TextView-->
+<!--        android:id="@+id/format_tips"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:textSize="@dimen/text_barcode"-->
+<!--        android:layout_marginLeft="@dimen/item_generate_margin"-->
+<!--        android:layout_marginRight="@dimen/item_generate_margin"/>-->
     <EditText
         android:id="@+id/input_content_product"
         android:layout_width="match_parent"

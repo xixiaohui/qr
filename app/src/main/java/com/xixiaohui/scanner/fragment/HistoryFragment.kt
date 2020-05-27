@@ -11,6 +11,8 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.ItemTouchHelper.SimpleCallback
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
@@ -41,7 +43,9 @@ class HistoryFragment : Fragment() {
 
     private lateinit var data: MutableList<MyResult>
 
-    private lateinit var myTag:String
+    private lateinit var myTag: String
+
+    fun selector(p: MyResult): Long = p.result.timestamp
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +56,10 @@ class HistoryFragment : Fragment() {
         }
 
         data = resultList
+
+        data.sortByDescending {
+            selector(it)
+        }
     }
 
     override fun onCreateView(
@@ -73,7 +81,7 @@ class HistoryFragment : Fragment() {
                         data, this@HistoryFragment
                     )
 
-                if (myTag == FavoriteActivityTag){
+                if (myTag == FavoriteActivityTag) {
                     val myad = adapter as MyItemRecyclerViewAdapter
                     myad.filter.filter(data.toString())
                 }
@@ -82,13 +90,15 @@ class HistoryFragment : Fragment() {
         }
         binding.list.setItemViewCacheSize(5000)
 
+        ItemTouchHelper(itemTouchHelperCallBack).attachToRecyclerView(binding.list)
 
-        binding.list.addOnItemClickListener(object : OnItemClickListener {
-            override fun onItemClicked(position: Int, view: View, holder: RecyclerView.ViewHolder) {
+//        binding.list.addOnItemClickListener(object : OnItemClickListener {
+//            override fun onItemClicked(position: Int, view: View, holder: RecyclerView.ViewHolder) {
 //                Toast.makeText(context, "position" + position, Toast.LENGTH_LONG).show()
 //                var holder = holder as MyItemRecyclerViewAdapter.ViewHolder
-            }
-        })
+//            }
+//        })
+
 
         return binding.root
     }
@@ -102,12 +112,12 @@ class HistoryFragment : Fragment() {
 
         // TODO: Customize parameter initialization
         @JvmStatic
-        fun newInstance(columnCount: Int, data: MutableList<MyResult>,tag:String): Fragment {
+        fun newInstance(columnCount: Int, data: MutableList<MyResult>, tag: String): Fragment {
 
             val fragment = HistoryFragment().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_COLUMN_COUNT, columnCount)
-                    putString(TAG,tag)
+                    putString(TAG, tag)
                 }
             }
             return fragment
@@ -217,5 +227,27 @@ class HistoryFragment : Fragment() {
     fun refreshResult(myResult: MyResult, position: Int) {
         var key = keyList[position]
         SpUtils.saveBean(this.context, key, myResult)
+    }
+
+
+    private val itemTouchHelperCallBack: SimpleCallback = object : SimpleCallback(0, ItemTouchHelper.LEFT) {
+
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ): Boolean {
+            return false
+        }
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            resultList.removeAt(viewHolder.adapterPosition)
+            SpUtils.remove(activity!!.baseContext, keyList[viewHolder.adapterPosition])
+
+            val view = binding.list
+            with(view) {
+                adapter!!.notifyDataSetChanged()
+            }
+        }
     }
 }

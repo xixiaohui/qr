@@ -28,20 +28,19 @@ class GenerateProductFragment : Fragment(), GenerateString {
     private lateinit var binding: FragmentGenerateProductBinding
 
     private var tips = mutableListOf<String>(
-        "Ex:12345670",
-        "Ex:5701234567899",
-        "Ex:12345670",
-        "Ex:012345678912",
-        "Ex:123456ABC",
-        "Ex:WIKIPEDIA",
-        "Ex:code128",
-        "Ex:00012345678905",
-        "Ex:This is a PDF417",
-        "Ex:12345678",
-        "Ex:Deo free app",
-        "Ex:www.amazon.com"
+        "12345670",
+        "5701234567899",
+        "12345670",
+        "012345678912",
+        "123456ABC",
+        "WIKIPEDIA",
+        "code128",
+        "00012345678905",
+        "This is a PDF417",
+        "12345678",
+        "Deo free app",
+        "www.amazon.com"
     )
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +48,6 @@ class GenerateProductFragment : Fragment(), GenerateString {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-
     }
 
     override fun onCreateView(
@@ -64,8 +62,6 @@ class GenerateProductFragment : Fragment(), GenerateString {
             startActivity(intent)
         }
 
-        binding.formatTips.text = tips[0]
-
         binding.productType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
 
@@ -77,7 +73,7 @@ class GenerateProductFragment : Fragment(), GenerateString {
                 position: Int,
                 id: Long
             ) {
-                binding.formatTips.text = tips[position]
+                binding.inputContentProduct.hint = tips[position]
             }
         }
 

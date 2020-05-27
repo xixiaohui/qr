@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity() {
             resultList.add(result)
             keyList.add(k)
         }
-//        println(resultList)
+        println(resultList)
     }
 
 

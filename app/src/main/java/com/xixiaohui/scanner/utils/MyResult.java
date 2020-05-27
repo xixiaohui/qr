@@ -23,4 +23,5 @@ public class MyResult{
     public void setFavorite(Boolean favorite) {
         isFavorite = favorite;
     }
+
 }

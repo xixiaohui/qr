@@ -499,7 +499,7 @@ public class SpUtils {
         return objString != null && objString != "";
     }
 
-    public static Map<String,?> getAllRecode(Context context){
+    public static Map<String, ?> getAllRecode(Context context) {
         return context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE).getAll();
     }
 
@@ -516,14 +516,14 @@ public class SpUtils {
         return secretKey.toString();
     }
 
-    public static void remove(Context context,String key){
+    public static void remove(Context context, String key) {
         SharedPreferences.Editor editor = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE).edit();
         editor.remove(key);
         editor.commit();
     }
 
-    public static String getDate(Long timeStamp){
-        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public static String getDate(Long timeStamp) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String sd = sdf.format(new Date(Long.parseLong(String.valueOf(timeStamp))));      // 时间戳转换成时间
         return sd;
     }
