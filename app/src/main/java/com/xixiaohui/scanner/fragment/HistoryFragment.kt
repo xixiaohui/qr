@@ -1,6 +1,7 @@
 package com.xixiaohui.scanner.fragment
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -45,7 +46,9 @@ class HistoryFragment : Fragment() {
 
     private lateinit var myTag: String
 
-    fun selector(p: MyResult): Long = p.result.timestamp
+    private fun selector(p: MyResult): Long = p.result.timestamp
+
+    private var mycontext:Context? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,9 +60,11 @@ class HistoryFragment : Fragment() {
 
         data = resultList
 
-        data.sortByDescending {
-            selector(it)
-        }
+//        data.sortByDescending {
+//            selector(it)
+//        }
+
+        mycontext = this.context
     }
 
     override fun onCreateView(
@@ -241,13 +246,27 @@ class HistoryFragment : Fragment() {
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            resultList.removeAt(viewHolder.adapterPosition)
-            SpUtils.remove(activity!!.baseContext, keyList[viewHolder.adapterPosition])
+//            data.removeAt(viewHolder.adapterPosition)
+//            val beforeallRecord = SpUtils.getAllRecode(mycontext)
+
+            var result:MyResult = data[viewHolder.adapterPosition]
+            data.remove(result)
+
+            SpUtils.remove(mycontext, keyList[viewHolder.adapterPosition])
+
+//            val afterallRecord = SpUtils.getAllRecode(mycontext)
+
 
             val view = binding.list
             with(view) {
                 adapter!!.notifyDataSetChanged()
             }
+
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
     }
 }

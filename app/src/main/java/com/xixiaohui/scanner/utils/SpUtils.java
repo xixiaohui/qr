@@ -524,7 +524,7 @@ public class SpUtils {
 
     public static String getDate(Long timeStamp) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String sd = sdf.format(new Date(Long.parseLong(String.valueOf(timeStamp))));      // 时间戳转换成时间
+        String sd = sdf.format(new Date(Long.parseLong(String.valueOf(timeStamp))));// 时间戳转换成时间
         return sd;
     }
 }

@@ -37,6 +37,18 @@ interface GenerateString{
         )
         return intent
     }
+    fun createIntent(context: Context,result: String):Intent{
+        val intent = Intent(context, GenerateResultActivity::class.java)
+        intent.putExtra(
+            GenerateResultActivity.GenerateResultActivityData.RESULT.toString(),
+            result
+        )
+        intent.putExtra(
+            GenerateResultActivity.GenerateResultActivityData.FORMAT.toString(),
+            getFormat()
+        )
+        return intent
+    }
 }
 
 class GenerateActivity : AppCompatActivity() {

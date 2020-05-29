@@ -44,13 +44,13 @@
         android:id="@+id/item_star"
         android:layout_width="@dimen/item_image"
         android:layout_height="wrap_content"
-        android:tag="unselect"
+        android:layout_marginLeft="20dp"
         android:src="@drawable/baseline_star_border_black_48dp">
     </ImageView>
-    <ImageView
-        android:id="@+id/item_more"
-        android:layout_width="@dimen/item_image"
-        android:layout_height="wrap_content"
-        android:src="@drawable/baseline_more_vert_black_48dp">
-    </ImageView>
+<!--    <ImageView-->
+<!--        android:id="@+id/item_more"-->
+<!--        android:layout_width="@dimen/item_image"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:src="@drawable/baseline_more_vert_black_48dp">-->
+<!--    </ImageView>-->
 </LinearLayout>

@@ -60,16 +60,14 @@ class MyItemRecyclerViewAdapter(
         holder.itemImage.setImageResource(resourceId)
 
         holder.itemStar.setOnClickListener {
-            if (holder.itemStar.tag == "unselect") {
+            if (myResult.favorite == false) {
                 holder.itemStar.setImageResource(R.drawable.baseline_star_black_48dp)
-                holder.itemStar.tag = "select"
                 myResult.favorite = true
 
                 val frag = fragment as HistoryFragment
                 frag.refreshResult(myResult, position)
             } else {
                 holder.itemStar.setImageResource(R.drawable.baseline_star_border_black_48dp)
-                holder.itemStar.tag = "unselect"
                 myResult.favorite = false
 
                 val frag = fragment as HistoryFragment
@@ -77,9 +75,10 @@ class MyItemRecyclerViewAdapter(
             }
         }
 
-        if (values[position].favorite) {
+        if (myResult.favorite) {
             holder.itemStar.setImageResource(R.drawable.baseline_star_black_48dp)
-            holder.itemStar.tag = "select"
+        }else{
+            holder.itemStar.setImageResource(R.drawable.baseline_star_border_black_48dp)
         }
 
         //响应事件
@@ -93,11 +92,11 @@ class MyItemRecyclerViewAdapter(
             frag.gotoActivity(ScanActivity::class.java as Class<Activity>, item)
         }
 
-        holder.itemMore.setOnClickListener {
+//        holder.itemMore.setOnClickListener {
 //            SpUtils.remove(fragment.context, keyList[position])
 //            resultList.removeAt(position)
 //            notifyDataSetChanged()
-        }
+//        }
     }
 
     override fun getItemCount(): Int = values.size
@@ -108,7 +107,7 @@ class MyItemRecyclerViewAdapter(
         val itemImage: ImageView = view.item_image
         val itemType: TextView = view.item_type
         val itemStar = view.item_star
-        val itemMore = view.item_more
+//        val itemMore = view.item_more
 
     }
 
