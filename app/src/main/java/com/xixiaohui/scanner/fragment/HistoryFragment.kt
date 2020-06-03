@@ -137,7 +137,7 @@ class HistoryFragment : Fragment() {
             var text = result.text.toLowerCase()
             if (text.startsWith("mecard:") || text.startsWith("vcard:")) {
                 return CodeType.CONTACT
-            } else if (text.startsWith("mailto:")) {
+            } else if (text.startsWith("mailto:")||text.startsWith("matmsg:to:")) {
                 return CodeType.EMAIL
             } else if (text.startsWith("rulto:")) {
                 return CodeType.URL

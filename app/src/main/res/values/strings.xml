@@ -101,6 +101,7 @@
         <item>DATA_MATRIX</item>
         <item>AZTEC</item>
     </string-array>
-
+    
+    <string name="action_share">Share</string>
 
 </resources>

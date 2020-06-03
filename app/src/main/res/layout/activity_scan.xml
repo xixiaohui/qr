@@ -7,21 +7,73 @@
     android:background="@color/colorAccent"
     tools:context=".activity.ScanActivity">
 
+    <LinearLayout
+        android:id="@+id/linearLayout9"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@+id/barcode_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <ImageView
+            android:id="@+id/scan_type_image"
+            android:layout_width="@dimen/item_image"
+            android:layout_height="@dimen/item_image"
+            android:layout_margin="@dimen/app_item_margin"
+            android:src="@drawable/baseline_access_time_black_48dp"></ImageView>
+
+        <TextView
+            android:id="@+id/scan_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/app_item_margin"
+            android:text="time"
+            android:textSize="@dimen/scan_text_size" />
+
+        <TextView
+            android:id="@+id/scan_product_country"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/app_item_margin"
+            android:text="zn"
+            android:textSize="@dimen/scan_text_size" />
+
+        <TextView
+            android:id="@+id/scan_code_format"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/app_item_margin"
+            android:text="en_13"
+            android:textSize="@dimen/scan_text_size" />
+
+    </LinearLayout>
+
     <TextView
         android:id="@+id/barcode_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/text_barcode"
         android:background="@color/colorWhite"
+        android:padding="@dimen/text_margin"
+        android:textSize="@dimen/scan_result_text"
         app:layout_constraintBottom_toTopOf="@+id/barcodePreview"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.206"
-        android:padding="@dimen/text_margin">
+        app:layout_constraintVertical_bias="0.138"></TextView>
 
-    </TextView>
+    <LinearLayout
+        android:id="@+id/frame_extra_operations"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/barcodePreview"
+        app:layout_constraintTop_toBottomOf="@+id/barcode_text"
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_editor_absoluteX="0dp">
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/barcodePreview"
